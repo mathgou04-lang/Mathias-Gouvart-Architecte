@@ -131,11 +131,32 @@
     return node.dataset.category || node.closest('[data-category]')?.dataset.category || document.body?.dataset.category || '';
   }
 
+  function renderHomeHero(data, categoryMap) {
+    const hero = document.querySelector('[data-home-project]');
+    if (!hero) return;
+    const project = data.projects.find(item => item.featured);
+    hero.hidden = !project;
+    if (!project) return;
+    hero.href = projectUrl(project);
+    const photo = hero.querySelector('[data-home-project-image]');
+    if (photo) { photo.src = project.cover; photo.alt = project.coverAlt; }
+    const title = hero.querySelector('[data-home-project-title]');
+    if (title) title.textContent = project.title;
+    const category = hero.querySelector('[data-home-project-category]');
+    if (category) category.textContent = categoryMap.get(project.category).label;
+    const status = hero.querySelector('[data-home-project-status]');
+    if (status) { status.hidden = !project.sample; status.textContent = project.sample ? 'Projet de démonstration' : ''; }
+  }
+
   function renderLists(data, categoryMap) {
     document.querySelectorAll('[data-project-list]').forEach(list => {
       const category = categoryForNode(list);
       let projects = data.projects.filter(project => !category || project.category === category);
       if (list.dataset.featured === 'true') projects = projects.filter(project => project.featured);
+      if (list.dataset.excludeHero === 'true') {
+        const hero = data.projects.find(project => project.featured);
+        if (hero) projects = projects.filter(project => project.id !== hero.id);
+      }
       const limit = Number(list.dataset.limit);
       if (Number.isInteger(limit) && limit > 0) projects = projects.slice(0, limit);
       const fragment = document.createDocumentFragment();
@@ -252,6 +273,7 @@
     if (signature === lastSignature) return false;
 
     const categoryMap = new Map(data.categories.map(category => [category.id, category]));
+    renderHomeHero(data, categoryMap);
     renderLists(data, categoryMap);
     renderDetail(data, categoryMap);
     lastSignature = signature;
