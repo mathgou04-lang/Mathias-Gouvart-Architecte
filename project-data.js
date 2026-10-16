@@ -108,6 +108,7 @@
     card.dataset.projectId = project.id;
 
     const imageContainer = makeElement('div', 'project-card-image');
+    imageContainer.dataset.imageMotion = '';
     const photo = makeElement('img', 'project-card-photo');
     photo.src = project.cover;
     photo.alt = project.coverAlt;
@@ -117,7 +118,9 @@
 
     const body = makeElement('div', 'project-card-body');
     body.append(makeElement('p', 'project-card-category', category.label));
-    body.append(makeElement('h3', 'project-card-title', project.title));
+    const title = makeElement('h3', 'project-card-title', project.title);
+    title.dataset.textReveal = '';
+    body.append(title);
     if (project.sample) body.append(makeElement('span', 'project-card-tag', 'Projet de démonstration'));
     body.append(makeArrow());
     card.append(imageContainer, body);
@@ -169,6 +172,7 @@
         const link = makeElement('a', 'gallery-item');
         link.href = item.src;
         link.dataset.galleryItem = '';
+        link.dataset.imageMotion = '';
         link.dataset.image = item.src;
         link.dataset.alt = item.alt;
         link.dataset.title = project.title;

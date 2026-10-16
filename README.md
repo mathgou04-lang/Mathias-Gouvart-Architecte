@@ -17,11 +17,15 @@ Le serveur est nécessaire pour charger les contenus JSON. Une ouverture directe
 
 ## Identité visuelle
 
-Palette noire, grise et blanche, dégradés de gris en fondu et photos en couleur. Le monogramme MG doré fourni par Mathias est adapté en un visuel carré pour le web : `assets/logo-monogramme.webp`, utilisé dans les en-têtes, pieds de page et le panneau du bureau en attente du portrait. Le favicon PNG en dérive. Le fichier web a été préparé depuis l’image jointe avec l’outil de retouche ; il ne constitue pas un original vectoriel. Si Mathias fournit son fichier vectoriel ou PNG original, le préférer pour une reproduction exacte. Le logo ne remplace pas sa photo personnelle.
+Palette noire, grise et blanche, avec des fondus de gris discrets. Le logo complet corrigé est dans `assets/logo-mathias-gouvart.webp` : lignes et textes noirs, MG et barres dorés, fond transparent. Il est utilisé dans les en-têtes, pieds de page et le panneau du bureau en attente du portrait. Le favicon PNG en dérive. L’ancienne variante carrée lumineuse n’est plus utilisée. Le fichier web a été préparé depuis la dernière image jointe avec l’outil de retouche ; si un original vectoriel/PNG source est fourni, le préférer pour une reproduction exacte.
+
+La navigation Accueil / Projets / Le bureau / Contact est visible et centrée à toutes les largeurs, sans menu hamburger. L’accueil est un portfolio compact avec trois vignettes de hauteur voisine de 240 px à 1440 px ; la couverture d’une fiche est limitée à 400 px de haut. Les photos peuvent être agrandies volontairement dans la galerie. Les grands slogans, le hero plein écran et le diaporama de l’ancienne présentation ont été retirés.
+
+Les références n-co.be, Grolaux et bureau2g ont été demandées, mais aucune n’a pu être consultée depuis cet environnement : boucle301 pour n-co, refus403 du tunnel proxy pour les deux autres après ajout des domaines au brouillon et nouvelle tentative. Ne pas attribuer une observation visuelle de ces sites à ce travail.
 
 ## Pages et contenus
 
-- `index.html` : accueil, diaporama, approche et projets sélectionnés.
+- `index.html` : présentation compacte du bureau et trois projets sélectionnés.
 - `bureau.html` : présentation et emplacement du portrait.
 - `projets.html`, `projets-neufs.html`, `projets-renovations.html` : sélection et deux catégories.
 - `projet-*.html` : fiches statiques des trois exemples ; `projet.html?id=identifiant` accueille les nouveaux projets.
@@ -49,7 +53,7 @@ FormSubmit demande au propriétaire d’activer son adresse au premier envoi. Ma
 
 ## Mouvement et accessibilité
 
-Entrées de textes, masques d’images, révélations au défilement, parallaxe discrète sur ordinateur, transitions entre pages et galeries natives. Le diaporama change toutes les 7,2 secondes et possède des commandes manuelles et une pause. Menu et galerie gèrent le clavier et le retour de focus. `prefers-reduced-motion` arrête les animations et la lecture automatique, y compris lors d’un changement de préférence. Le défilement reste natif et le contenu reste visible sans les API d’animation.
+Titres révélés mot par mot avec nom accessible conservé, masques d’images avec dézoom, révélations au défilement, microparallaxe au pointeur et au défilement sur ordinateur, transitions entre pages et galeries natives. Les animations restent présentes sur mobile ; les mouvements liés au pointeur y sont désactivés. Sous-menu et galerie gèrent le clavier et le retour de focus. `prefers-reduced-motion` arrête immédiatement les effets, y compris lors d’un changement de préférence. Le défilement reste natif et le contenu reste visible sans les API d’animation. Les nouveaux projets chargés depuis le JSON sont inscrits dans les animations sans rejouer les éléments déjà vus.
 
 Les catégories ont des pages distinctes. Les premières fiches et leurs images restent consultables sans JavaScript ; les projets ajoutés après génération nécessitent JavaScript jusqu’à une nouvelle génération.
 

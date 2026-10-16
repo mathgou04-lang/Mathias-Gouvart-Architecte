@@ -106,3 +106,5 @@
 @media(max-width:360px){.editor-header{gap:12px}.editor-brand{gap:8px}.editor-brand-symbol{width:40px;height:40px}.editor-brand-wordmark{font-size:14px}.editor-brand-wordmark>span:last-child{font-size:6px}.editor-site-link{max-width:87px;font-size:9px}}
 
 .editor-brand-name{word-spacing:.1em}
+.editor-brand-logo{display:block;width:125px;height:102px;object-fit:contain}.editor-header{padding-top:12px;padding-bottom:12px}.editor-body .editor-main{padding-top:42px}.editor-body .editor-title{font:400 clamp(30px,4vw,46px)/1.3 var(--sans);letter-spacing:-.035em}.editor-body .editor-main h2,.editor-body .editor-main h3{font-family:var(--sans)}
+@media(max-width:500px){.editor-brand-logo{width:105px;height:85px}.editor-header{padding-top:9px;padding-bottom:9px}.editor-body .editor-main{padding-top:30px}}
