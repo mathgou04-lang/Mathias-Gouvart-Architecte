@@ -15,6 +15,10 @@ Le serveur est nécessaire pour charger les contenus JSON. Une ouverture directe
 
 `build.py` utilise uniquement la bibliothèque standard. Il régénère 11 pages et les versions des ressources CSS/JS. Les images et les polices Manrope et Cormorant Garamond sont auto-hébergées, avec leurs licences SIL OFL. La navigation du site ne requiert aucun service externe ; l’envoi du formulaire utilise FormSubmit.
 
+## Identité visuelle
+
+Palette noire, grise et blanche, dégradés de gris en fondu et photos en couleur. Le monogramme MG doré fourni par Mathias est adapté en un visuel carré pour le web : `assets/logo-monogramme.webp`, utilisé dans les en-têtes, pieds de page et le panneau du bureau en attente du portrait. Le favicon PNG en dérive. Le fichier web a été préparé depuis l’image jointe avec l’outil de retouche ; il ne constitue pas un original vectoriel. Si Mathias fournit son fichier vectoriel ou PNG original, le préférer pour une reproduction exacte. Le logo ne remplace pas sa photo personnelle.
+
 ## Pages et contenus
 
 - `index.html` : accueil, diaporama, approche et projets sélectionnés.

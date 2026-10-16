@@ -41,11 +41,15 @@ def card(p):
       <div class="project-card-body"><p class="project-card-category">{e(CATEGORIES[p['category']]['label'])}</p><h3 class="project-card-title">{e(p['title'])}</h3>{tag}{arrow()}</div></a>'''
 
 
+def brand_markup():
+    return f'<img class="brand-symbol" src="{asset("assets/logo-monogramme.webp")}" width="64" height="64" alt="" decoding="async"><span class="brand-wordmark"><span class="brand-name">Mathias Gouvart</span><span class="brand-profession">Architecte</span></span>'
+
+
 def header(active):
     def current(key):
         return ' aria-current="page"' if active == key else ''
     return f'''<a class="skip-link" href="#contenu">Aller au contenu</a>
-    <header class="site-header"><a class="brand" href="index.html" aria-label="Mathias Gouvart Architecte — Accueil"><span>Mathias Gouvart<span class="brand-dot">.</span></span><span class="brand-profession">Architecte</span></a>
+    <header class="site-header"><a class="brand" href="index.html" aria-label="Mathias Gouvart Architecte — Accueil">{brand_markup()}</a>
     <button class="menu-toggle" aria-controls="navigation" aria-expanded="false" hidden><span class="menu-label">Menu</span><span class="menu-icon" aria-hidden="true"></span></button>
     <nav id="navigation" class="navigation" aria-label="Navigation principale">
       <a href="index.html"{current('home')}>Accueil</a><a href="bureau.html"{current('studio')}>Le bureau</a>
@@ -57,14 +61,14 @@ def header(active):
 
 def footer(cta=True):
     invitation = f'''<section class="contact-invitation section-pad" data-reveal><p class="eyebrow">Chaque projet commence par une rencontre</p><div class="invitation-row"><h2>Et si nous parlions<br>de votre projet ?</h2>{link('contact.html', 'Commençons un échange', 'button button-light')}</div></section>''' if cta else ''
-    return invitation + f'''<footer class="site-footer section-pad"><div class="footer-top"><a class="brand footer-brand" href="index.html"><span>Mathias Gouvart.</span><span class="brand-profession">Architecte</span></a><div class="footer-contact"><a href="mailto:{e(SITE['email'])}">{e(SITE['email'])}</a><a href="tel:{e(SITE['phoneLink'])}">{e(SITE['phone'])}</a></div><nav aria-label="Navigation de bas de page"><a href="bureau.html">Le bureau</a><a href="projets.html">Les projets</a><a href="contact.html">Contact</a></nav></div><div class="footer-bottom"><span>© 2026 Mathias Gouvart Architecte</span><span>Architecture & espaces de vie</span><a href="#haut">Retour en haut ↑</a></div></footer>'''
+    return invitation + f'''<footer class="site-footer section-pad"><div class="footer-top"><a class="brand footer-brand" href="index.html">{brand_markup()}</a><div class="footer-contact"><a href="mailto:{e(SITE['email'])}">{e(SITE['email'])}</a><a href="tel:{e(SITE['phoneLink'])}">{e(SITE['phone'])}</a></div><nav aria-label="Navigation de bas de page"><a href="bureau.html">Le bureau</a><a href="projets.html">Les projets</a><a href="contact.html">Contact</a></nav></div><div class="footer-bottom"><span>© 2026 Mathias Gouvart Architecte</span><span>Architecture & espaces de vie</span><a href="#haut">Retour en haut ↑</a></div></footer>'''
 
 
 def page(path, title, desc, body, active='projects', main_attrs='', contact=False, cta=True):
     bootstrap = json.dumps(DATA, ensure_ascii=False, separators=(',', ':')).replace('<', '\\u003c')
     content = f'''<!doctype html>
-<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#172b41">
-<title>{e(title)} — Mathias Gouvart Architecte</title><meta name="description" content="{e(desc)}"><link rel="icon" href="assets/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="{asset('styles.css')}">
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#151515">
+<title>{e(title)} — Mathias Gouvart Architecte</title><meta name="description" content="{e(desc)}"><link rel="icon" href="{asset("assets/favicon.png")}" type="image/png"><link rel="stylesheet" href="{asset('styles.css')}">
 <meta property="og:title" content="{e(title)} — Mathias Gouvart Architecte"><meta property="og:description" content="{e(desc)}"><meta property="og:image" content="{PUBLIC}assets/architecture-hero.webp"><meta property="og:type" content="website"><meta property="og:locale" content="fr_BE">
 <script>document.documentElement.classList.add('js');</script>
 <script id="project-bootstrap" type="application/json">{bootstrap}</script><script src="{asset('project-data.js')}" defer></script><script src="{asset('script.js')}" defer></script><script src="{asset('motion.js')}" defer></script>{f'<script src="{asset("contact.js")}" defer></script>' if contact else ''}</head>
@@ -94,7 +98,7 @@ def studio():
     if portrait and re.fullmatch(r'assets/(?:[a-zA-Z0-9_-]+/)*[a-zA-Z0-9_-]+\.(?:webp|png|jpe?g|avif)', portrait):
         visual = f'<img src="{e(portrait)}" alt="{e(SITE["portraitAlt"])}" class="portrait-photo">'
     else:
-        visual = '<div class="portrait-placeholder"><span class="portrait-monogram" aria-hidden="true">MG</span><div><span class="eyebrow">Mathias Gouvart</span><p>Portrait à venir</p></div></div>'
+        visual = '<div class="portrait-placeholder"><img class="portrait-logo" src="assets/logo-monogramme.webp" alt="Logo de Mathias Gouvart Architecte" width="512" height="512"><div><span class="eyebrow">Mathias Gouvart</span><p>Portrait à venir</p></div></div>'
     bio = ''.join(f'<p>{e(p)}</p>' for p in SITE['biography'])
     body = f'''<section class="page-heading section-pad"><p class="eyebrow" data-intro>Le bureau</p><h1 data-intro data-delay="100">L’architecture<br>commence par <em>vous.</em></h1><p class="page-lead" data-intro data-delay="220">Une écoute, un regard, une attention portée à ce qui fait la singularité de votre projet.</p></section><section class="studio-section section-pad"><div class="portrait-block" data-reveal="image">{visual}</div><div class="studio-copy" data-reveal><p class="eyebrow">Une approche personnelle</p><h2>Mathias Gouvart<span class="studio-role">Architecte</span></h2><div class="prose">{bio}</div>{link('contact.html', 'Faire connaissance')}</div></section><section class="values-section section-pad"><p class="eyebrow" data-reveal>Du premier échange au détail</p><div class="values-grid"><article data-reveal><span class="value-number">01</span><h3>Écouter</h3><p>Comprendre votre quotidien, vos besoins et vos priorités pour poser les bonnes questions.</p></article><article data-reveal><span class="value-number">02</span><h3>Concevoir</h3><p>Mettre en relation le lieu, les volumes et la lumière pour donner une direction claire au projet.</p></article><article data-reveal><span class="value-number">03</span><h3>Affiner</h3><p>Travailler les proportions, les matières et les détails qui donnent sa cohérence à l’ensemble.</p></article></div></section>'''
     page('bureau.html', 'Le bureau', 'Découvrez Mathias Gouvart et son approche de l’architecture, de la construction neuve à la transformation.', body, 'studio')
@@ -150,7 +154,7 @@ if __name__ == '__main__':
     owner = ROOT / 'gestion.html'
     if owner.exists():
         source = owner.read_text()
-        for name in ('styles.css', 'editor.css', 'editor.js'):
+        for name in ('styles.css', 'editor.css', 'editor.js', 'assets/logo-monogramme.webp', 'assets/favicon.png'):
             source = re.sub(r'((?:src|href)="' + re.escape(name) + r')(?:\?v=[^"]*)?"', lambda m: m[1] + '?v=' + asset(name).split('?v=')[1] + '"', source)
         owner.write_text(source)
     print('Generated ' + str(len(OUTPUT)) + ' pages: ' + ', '.join(OUTPUT))
