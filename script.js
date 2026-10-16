@@ -8,8 +8,21 @@
   const reducedMotion = typeof window.matchMedia === 'function'
     ? window.matchMedia('(prefers-reduced-motion: reduce)')
     : { matches: false };
+  const mobileViewport = typeof window.matchMedia === 'function'
+    ? window.matchMedia('(max-width: 900px)')
+    : { matches: true };
+  const finePointer = typeof window.matchMedia === 'function'
+    ? window.matchMedia('(hover: hover) and (pointer: fine)')
+    : { matches: false };
+  const projectToggle = document.querySelector('[data-project-toggle]');
+  const projectSubmenu = document.querySelector('#project-submenu');
+  const projectNavigation = projectToggle && projectToggle.closest('.nav-projects');
   let menuOpen = false;
+  let projectExpanded = false;
+  let projectHovered = false;
+  let projectCloseTimer = null;
   let dialogOpen = false;
+  let pageLeaving = false;
   let updatePlayback = () => {};
 
   function setInert(element, value) {
@@ -18,55 +31,113 @@
     element.toggleAttribute('inert', value);
   }
 
+  function setProjectExpanded(open, restoreFocus = false) {
+    if (!projectToggle || !projectSubmenu || !projectNavigation) return;
+    if (projectCloseTimer !== null) {
+      window.clearTimeout(projectCloseTimer);
+      projectCloseTimer = null;
+    }
+    projectExpanded = Boolean(open);
+    projectToggle.setAttribute('aria-expanded', String(projectExpanded));
+    projectNavigation.classList.toggle('is-expanded', projectExpanded);
+    setInert(projectSubmenu, !projectExpanded);
+    if (restoreFocus) projectToggle.focus({ preventScroll: true });
+  }
+
   function setMenu(open, restoreFocus = false) {
     if (!header || !menuToggle || !navigation) return;
-    menuOpen = Boolean(open);
+    menuOpen = Boolean(open && mobileViewport.matches);
     menuToggle.setAttribute('aria-expanded', String(menuOpen));
     const label = menuToggle.querySelector('.menu-label');
     if (label) label.textContent = menuOpen ? 'Fermer' : 'Menu';
     header.classList.toggle('is-open', menuOpen);
     navigation.classList.toggle('is-open', menuOpen);
     document.body.classList.toggle('menu-open', menuOpen);
-    setInert(navigation, !menuOpen);
+    setInert(navigation, mobileViewport.matches && !menuOpen);
     setInert(main, menuOpen);
-    if (restoreFocus) menuToggle.focus({ preventScroll: true });
+    if (!menuOpen) setProjectExpanded(false);
+    if (restoreFocus && mobileViewport.matches) menuToggle.focus({ preventScroll: true });
     updatePlayback();
     document.dispatchEvent(new CustomEvent('site:menu-change', { detail: { open: menuOpen } }));
   }
 
+  if (projectToggle && projectSubmenu && projectNavigation) {
+    // The unenhanced submenu remains usable; CSS animates its enhanced state.
+    projectSubmenu.hidden = false;
+    setProjectExpanded(false);
+    projectToggle.addEventListener('click', () => setProjectExpanded(!projectExpanded));
+    const scheduleProjectClose = () => {
+      if (projectCloseTimer !== null) window.clearTimeout(projectCloseTimer);
+      projectCloseTimer = window.setTimeout(() => {
+        projectCloseTimer = null;
+        if (!projectHovered && !projectNavigation.contains(document.activeElement)) setProjectExpanded(false);
+      }, 180);
+    };
+    projectNavigation.addEventListener('pointerenter', (event) => {
+      if (mobileViewport.matches || !finePointer.matches || event.pointerType === 'touch') return;
+      projectHovered = true;
+      setProjectExpanded(true);
+    });
+    projectNavigation.addEventListener('pointerleave', (event) => {
+      if (event.pointerType === 'touch') return;
+      projectHovered = false;
+      scheduleProjectClose();
+    });
+    projectNavigation.addEventListener('focusout', scheduleProjectClose);
+    document.addEventListener('click', (event) => {
+      if (projectExpanded && !projectNavigation.contains(event.target)) setProjectExpanded(false);
+    });
+  }
+
   if (header && menuToggle && navigation) {
-    menuToggle.hidden = false;
+    const syncMenuViewport = () => {
+      const focusedToggle = document.activeElement === menuToggle;
+      const focusedNavigation = navigation.contains(document.activeElement);
+      menuToggle.hidden = !mobileViewport.matches;
+      projectHovered = false;
+      setMenu(false);
+      if (mobileViewport.matches && focusedNavigation) menuToggle.focus({ preventScroll: true });
+      else if (!mobileViewport.matches && focusedToggle) header.querySelector('.brand')?.focus({ preventScroll: true });
+    };
     menuToggle.addEventListener('click', () => setMenu(!menuOpen));
     header.addEventListener('click', (event) => {
-      if (event.target instanceof Element && event.target.closest('a[href]') && menuOpen) {
-        // Let the browser follow the anchor once the destination is interactive again.
+      if (event.target instanceof Element && event.target.closest('a[href]')) {
+        // Unlock an anchor destination before the browser follows its link.
         setMenu(false);
       }
     });
-    document.addEventListener('keydown', (event) => {
-      if (!menuOpen) return;
-      if (event.key === 'Escape') {
-        event.preventDefault();
-        setMenu(false, true);
-        return;
-      }
-      if (event.key !== 'Tab') return;
-      const controls = Array.from(header.querySelectorAll(
-        'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
-      )).filter((element) => !element.closest('[inert]') && element.getClientRects().length > 0 && getComputedStyle(element).visibility !== 'hidden');
-      if (!controls.length) return;
-      const first = controls[0];
-      const last = controls[controls.length - 1];
-      if (event.shiftKey && (document.activeElement === first || !header.contains(document.activeElement))) {
-        event.preventDefault();
-        last.focus();
-      } else if (!event.shiftKey && (document.activeElement === last || !header.contains(document.activeElement))) {
-        event.preventDefault();
-        first.focus();
-      }
-    });
-    setMenu(false);
+    if (typeof mobileViewport.addEventListener === 'function') mobileViewport.addEventListener('change', syncMenuViewport);
+    else if (typeof mobileViewport.addListener === 'function') mobileViewport.addListener(syncMenuViewport);
+    syncMenuViewport();
   }
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && projectExpanded) {
+      event.preventDefault();
+      setProjectExpanded(false, true);
+      return;
+    }
+    if (!menuOpen || !header) return;
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      setMenu(false, true);
+      return;
+    }
+    if (event.key !== 'Tab') return;
+    const controls = Array.from(header.querySelectorAll(
+      'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    )).filter((element) => !element.closest('[inert]') && element.getClientRects().length > 0 && getComputedStyle(element).visibility !== 'hidden');
+    if (!controls.length) return;
+    const first = controls[0];
+    const last = controls[controls.length - 1];
+    if (event.shiftKey && (document.activeElement === first || !header.contains(document.activeElement))) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && (document.activeElement === last || !header.contains(document.activeElement))) {
+      event.preventDefault();
+      first.focus();
+    }
+  });
 
   if (header) {
     let scrollPending = false;
@@ -119,7 +190,7 @@
 
   function canPlay() {
     return slides.length > 1 && !userPaused && !reducedMotion.matches &&
-      !document.hidden && !menuOpen && !dialogOpen && heroVisible &&
+      !document.hidden && !menuOpen && !dialogOpen && !pageLeaving && heroVisible &&
       !controlsHovered && !controlsFocused && !loading;
   }
 
@@ -286,43 +357,84 @@
   const studyImage = document.querySelector('#study-image');
   const studyTitle = document.querySelector('#study-title');
   const studyDescription = document.querySelector('#study-description');
+  const galleryCounter = dialog && dialog.querySelector('[data-gallery-counter]');
+  const gallerySteps = dialog ? Array.from(dialog.querySelectorAll('[data-gallery-step]')) : [];
   let dialogOpener = null;
+  let galleryItems = [];
+  let galleryIndex = 0;
 
   function closeStudy() {
     if (dialog && dialog.open && typeof dialog.close === 'function') dialog.close();
   }
 
   function safeImageSource(value) {
-    if (!value || /^[a-z][a-z\d+.-]*:/i.test(value) || value.startsWith('//') || value.includes('\\')) return null;
+    if (!value || value.includes('\\')) return null;
     try {
       const resolved = new URL(value, document.baseURI);
-      return resolved.origin === window.location.origin ? value : null;
+      if (!/^https?:$/.test(resolved.protocol) || resolved.origin !== window.location.origin) return null;
+      return resolved.href;
     } catch {
       return null;
     }
   }
 
+  function gallerySource(item) {
+    return safeImageSource(item?.dataset.image || item?.getAttribute('href'));
+  }
+
+  function renderStudy() {
+    const item = galleryItems[galleryIndex];
+    const source = gallerySource(item);
+    if (!item || !source || !studyImage || !studyTitle || !studyDescription) return;
+    studyImage.src = source;
+    studyImage.alt = item.dataset.alt || '';
+    studyTitle.textContent = item.dataset.title || 'Étude architecturale';
+    studyDescription.textContent = item.dataset.description || '';
+    if (galleryCounter) galleryCounter.textContent = `${String(galleryIndex + 1).padStart(2, '0')} / ${String(galleryItems.length).padStart(2, '0')}`;
+    gallerySteps.forEach((button) => { button.hidden = galleryItems.length < 2; });
+  }
+
+  function stepGallery(direction) {
+    if (galleryItems.length < 2) return;
+    galleryIndex = (galleryIndex + direction + galleryItems.length) % galleryItems.length;
+    renderStudy();
+  }
+
   if (dialog && studyImage && studyTitle && studyDescription && typeof dialog.showModal === 'function') {
-    document.querySelectorAll('[data-study]').forEach((button) => {
-      button.addEventListener('click', (event) => {
-        if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-        const source = safeImageSource(button.dataset.image);
-        if (!source) return;
+    document.addEventListener('click', (event) => {
+        const item = event.target instanceof Element ? event.target.closest('[data-study], [data-gallery-item]') : null;
+        if (!item) return;
+        if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+        if (!gallerySource(item)) return;
         event.preventDefault();
-        dialogOpener = button;
-        studyImage.src = source;
-        studyImage.alt = button.dataset.alt || '';
-        studyTitle.textContent = button.dataset.title || 'Étude architecturale';
-        studyDescription.textContent = button.dataset.description || '';
+        dialogOpener = item;
+        const collection = item.closest('[data-gallery]');
+        galleryItems = collection
+          ? Array.from(collection.querySelectorAll('[data-gallery-item]')).filter((entry) => gallerySource(entry))
+          : [item];
+        if (!galleryItems.includes(item)) galleryItems = [item];
+        galleryIndex = galleryItems.indexOf(item);
+        renderStudy();
         if (menuOpen) setMenu(false);
+        setProjectExpanded(false);
         if (!dialog.open) dialog.showModal();
         dialogOpen = true;
         document.body.classList.add('dialog-open');
         updatePlayback();
         document.dispatchEvent(new CustomEvent('site:dialog-change', { detail: { open: true } }));
-      });
+    });
+    gallerySteps.forEach((button) => {
+      button.addEventListener('click', () => stepGallery(button.dataset.galleryStep === 'prev' ? -1 : 1));
     });
     dialog.querySelectorAll('[data-close-dialog]').forEach((button) => button.addEventListener('click', closeStudy));
+    dialog.addEventListener('keydown', (event) => {
+      if (!dialog.open || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+      if (event.target instanceof Element && event.target.closest('input, textarea, select, [contenteditable="true"]')) return;
+      if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
+        event.preventDefault();
+        stepGallery(event.key === 'ArrowRight' ? 1 : -1);
+      }
+    });
     dialog.addEventListener('click', (event) => {
       if (event.target !== dialog) return;
       const bounds = dialog.getBoundingClientRect();
@@ -336,6 +448,72 @@
       document.dispatchEvent(new CustomEvent('site:dialog-change', { detail: { open: false } }));
     });
   }
+
+  const transitionVeil = document.querySelector('[data-page-transition]');
+  let leaveAnimation = null;
+  let leaveTimeout = null;
+  let leaveVersion = 0;
+
+  function resetPageTransition() {
+    leaveVersion += 1;
+    if (leaveTimeout !== null) window.clearTimeout(leaveTimeout);
+    leaveTimeout = null;
+    if (leaveAnimation) leaveAnimation.cancel();
+    leaveAnimation = null;
+    pageLeaving = false;
+    document.body.classList.remove('is-leaving');
+    if (transitionVeil) {
+      transitionVeil.style.transform = '';
+      transitionVeil.style.transformOrigin = '';
+    }
+    updatePlayback();
+  }
+
+  document.addEventListener('click', (event) => {
+    if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    const link = event.target instanceof Element ? event.target.closest('a[href]') : null;
+    if (!link || link.hasAttribute('download') || (link.target && link.target.toLowerCase() !== '_self')) return;
+    const rawHref = link.getAttribute('href');
+    if (!rawHref || rawHref.startsWith('#')) return;
+    let destination;
+    try { destination = new URL(link.href, document.baseURI); } catch { return; }
+    if (!/^https?:$/.test(destination.protocol) || destination.origin !== window.location.origin) return;
+    // Fragment links on this document keep their native scrolling and history.
+    if (destination.pathname === window.location.pathname && destination.search === window.location.search) return;
+    const basePath = new URL('.', document.baseURI).pathname;
+    if (!/\.html$/i.test(destination.pathname) && destination.pathname !== basePath) return;
+    if (!transitionVeil || typeof transitionVeil.animate !== 'function' || reducedMotion.matches) return;
+    event.preventDefault();
+    if (pageLeaving) return;
+    pageLeaving = true;
+    const version = ++leaveVersion;
+    setMenu(false);
+    setProjectExpanded(false);
+    updatePlayback();
+    document.body.classList.add('is-leaving');
+    transitionVeil.style.transformOrigin = 'bottom';
+    let navigationStarted = false;
+    const navigate = () => {
+      if (!pageLeaving || version !== leaveVersion || navigationStarted) return;
+      navigationStarted = true;
+      if (leaveTimeout !== null) window.clearTimeout(leaveTimeout);
+      leaveTimeout = null;
+      try { window.location.assign(destination.href); } catch { resetPageTransition(); }
+    };
+    try {
+      leaveAnimation = transitionVeil.animate(
+        [{ transform: 'scaleY(0)' }, { transform: 'scaleY(1)' }],
+        { duration: 350, easing: 'cubic-bezier(.76, 0, .24, 1)', fill: 'forwards' }
+      );
+      leaveAnimation.finished.then(navigate, navigate);
+      leaveTimeout = window.setTimeout(navigate, 400);
+    } catch {
+      navigate();
+    }
+  }, { capture: true });
+
+  window.addEventListener('pageshow', resetPageTransition);
+  window.addEventListener('pagehide', stopTimer);
 
   const year = document.querySelector('#year');
   if (year) year.textContent = String(new Date().getFullYear());

@@ -1,28 +1,39 @@
 (() => {
   'use strict';
 
-  const easing = 'cubic-bezier(.22,1,.36,1)';
-  const animations = new Set();
   let reducedMotion;
   let desktopPointer;
-
-  // Unsupported preferences leave the fully visible static page intact.
+  // An unsupported preference API leaves the complete static page visible.
   try {
     reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-    desktopPointer = window.matchMedia('(min-width: 900px) and (hover: hover) and (pointer: fine)');
+    desktopPointer = window.matchMedia('(min-width: 901px) and (hover: hover) and (pointer: fine)');
   } catch {
     return;
   }
 
+  const easing = 'cubic-bezier(.22,1,.36,1)';
   const canAnimate = typeof Element.prototype.animate === 'function';
+  const canObserve = typeof window.IntersectionObserver === 'function';
+  const animations = new Set();
+  const seenIntros = new WeakSet();
+  const seenReveals = new WeakSet();
+  const pendingReveals = new Set();
+  const layersByWrapper = new Map();
+  const visibleLayers = new Set();
+  let revealObserver = null;
+  let parallaxObserver = null;
+  let parallaxEnabled = false;
+  let menuOpen = false;
+  let dialogOpen = false;
+  let frame = null;
+
   const delayFor = (element) => {
     const delay = Number(element.dataset.delay);
     return Number.isFinite(delay) ? Math.min(1600, Math.max(0, delay)) : 0;
   };
 
   function animateEntry(element, image = false, intro = false) {
-    if (!canAnimate || reducedMotion.matches || document.hidden) return;
-
+    if (!canAnimate || reducedMotion.matches || document.hidden || menuOpen || dialogOpen) return;
     const keyframes = image
       ? [
         { opacity: 0, clipPath: 'inset(0 0 8% 0)', transform: 'scale(1.035)' },
@@ -32,13 +43,12 @@
         { opacity: 0, transform: `translate3d(0, ${intro ? 32 : 24}px, 0)` },
         { opacity: 1, transform: 'translate3d(0, 0, 0)' },
       ];
-
     try {
       const animation = element.animate(keyframes, {
         duration: image ? 1050 : intro ? 800 : 700,
         delay: delayFor(element),
         easing,
-        // Final appearance always comes from the regular, visible stylesheet.
+        // The visible final state always belongs to the ordinary stylesheet.
         fill: 'backwards',
       });
       animations.add(animation);
@@ -50,58 +60,60 @@
         animation.oncancel = forget;
       }
     } catch {
-      // A failed effect never applies hidden styles to the underlying element.
+      // A failed effect never leaves a hidden inline style behind.
     }
   }
 
   function cancelEntries() {
     animations.forEach((animation) => {
-      try { animation.cancel(); } catch { /* Static content remains visible. */ }
+      try { animation.cancel(); } catch { /* Static content stays visible. */ }
     });
     animations.clear();
   }
 
-  const introElements = new Set(document.querySelectorAll('[data-intro]'));
-  introElements.forEach((element) => {
-    animateEntry(element, element.dataset.intro === 'image', true);
-  });
-
-  const revealElements = [...document.querySelectorAll('[data-reveal]')]
-    .filter((element) => !introElements.has(element));
-  let revealObserver;
-
-  if (canAnimate && typeof window.IntersectionObserver === 'function') {
+  function ensureRevealObserver() {
+    if (revealObserver || !canAnimate || !canObserve) return;
     try {
       revealObserver = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
+          if (!entry.isIntersecting || !pendingReveals.has(entry.target)) return;
           revealObserver.unobserve(entry.target);
-          animateEntry(entry.target, entry.target.dataset.reveal === 'image');
+          pendingReveals.delete(entry.target);
+          if (entry.target.isConnected) animateEntry(entry.target, entry.target.dataset.reveal === 'image');
         });
       }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
-      revealElements.forEach((element) => revealObserver.observe(element));
     } catch {
-      if (revealObserver) revealObserver.disconnect();
+      revealObserver = null;
     }
   }
 
-  const layers = [...document.querySelectorAll('[data-parallax]')]
-    .map((wrapper) => {
-      const layer = wrapper.querySelector('[data-parallax-layer]');
-      return layer ? {
-        wrapper,
-        layer,
-        originalTransform: layer.style.transform,
-        baseTransform: '',
-        offset: null,
-      } : null;
-    })
-    .filter(Boolean);
-  const layersByWrapper = new Map(layers.map((item) => [item.wrapper, item]));
-  const visibleLayers = new Set();
-  let parallaxObserver;
-  let parallaxEnabled = false;
-  let frame = null;
+  function revealPendingWithoutMotion() {
+    if (revealObserver) revealObserver.disconnect();
+    pendingReveals.clear();
+  }
+
+  function scanReveals() {
+    pendingReveals.forEach((element) => {
+      if (element.isConnected) return;
+      if (revealObserver) revealObserver.unobserve(element);
+      pendingReveals.delete(element);
+    });
+    document.querySelectorAll('[data-intro]').forEach((element) => {
+      if (seenIntros.has(element)) return;
+      seenIntros.add(element);
+      seenReveals.add(element);
+      animateEntry(element, element.dataset.intro === 'image', true);
+    });
+    if (!reducedMotion.matches) ensureRevealObserver();
+    document.querySelectorAll('[data-reveal]').forEach((element) => {
+      if (seenReveals.has(element)) return;
+      // Register once, even when motion is disabled or the observer is missing.
+      seenReveals.add(element);
+      if (reducedMotion.matches || !revealObserver) return;
+      pendingReveals.add(element);
+      revealObserver.observe(element);
+    });
+  }
 
   function restoreLayer(item) {
     if (item.offset === null) return;
@@ -110,16 +122,41 @@
     item.offset = null;
   }
 
+  function prepareLayer(item) {
+    const transform = window.getComputedStyle(item.layer).transform;
+    item.baseTransform = transform === 'none' ? '' : transform;
+  }
+
+  function scanParallaxLayers() {
+    layersByWrapper.forEach((item, wrapper) => {
+      if (wrapper.isConnected && wrapper.querySelector('[data-parallax-layer]') === item.layer) return;
+      if (parallaxObserver) parallaxObserver.unobserve(wrapper);
+      visibleLayers.delete(item);
+      restoreLayer(item);
+      layersByWrapper.delete(wrapper);
+    });
+    document.querySelectorAll('[data-parallax]').forEach((wrapper) => {
+      if (layersByWrapper.has(wrapper)) return;
+      const layer = wrapper.querySelector('[data-parallax-layer]');
+      if (!layer) return;
+      const item = { wrapper, layer, originalTransform: layer.style.transform, baseTransform: '', offset: null };
+      layersByWrapper.set(wrapper, item);
+      if (parallaxEnabled && parallaxObserver) {
+        prepareLayer(item);
+        parallaxObserver.observe(wrapper);
+      }
+    });
+  }
+
   function renderParallax() {
     frame = null;
     if (!parallaxEnabled || document.hidden) return;
     const viewportHeight = window.innerHeight;
     const updates = [];
-
-    // Batch geometry reads before transform writes.
+    // Finish all geometry reads before writing transforms.
     visibleLayers.forEach((item) => {
       const bounds = item.wrapper.getBoundingClientRect();
-      if (!bounds.height || bounds.bottom <= 0 || bounds.top >= viewportHeight) {
+      if (!item.wrapper.isConnected || !bounds.height || bounds.bottom <= 0 || bounds.top >= viewportHeight) {
         updates.push([item, null]);
         return;
       }
@@ -127,11 +164,9 @@
       const progress = distance / ((viewportHeight + bounds.height) / 2);
       updates.push([item, (Math.max(-1, Math.min(1, progress)) * 18).toFixed(2)]);
     });
-
     updates.forEach(([item, offset]) => {
-      if (offset === null) {
-        restoreLayer(item);
-      } else if (offset !== item.offset) {
+      if (offset === null) restoreLayer(item);
+      else if (offset !== item.offset) {
         item.layer.style.transform = `translate3d(0, ${offset}px, 0) ${item.baseTransform}`.trim();
         item.offset = offset;
       }
@@ -151,26 +186,25 @@
     window.removeEventListener('scroll', requestParallaxFrame);
     window.removeEventListener('resize', requestParallaxFrame);
     if (parallaxObserver) parallaxObserver.disconnect();
+    parallaxObserver = null;
     visibleLayers.clear();
-    layers.forEach(restoreLayer);
+    layersByWrapper.forEach(restoreLayer);
   }
 
   function updateParallax() {
-    const eligible = !reducedMotion.matches && desktopPointer.matches
-      && !navigator.maxTouchPoints && layers.length > 0
-      && typeof window.IntersectionObserver === 'function'
-      && typeof window.requestAnimationFrame === 'function';
+    const eligible = !reducedMotion.matches && !document.hidden && !menuOpen && !dialogOpen
+      && desktopPointer.matches && !navigator.maxTouchPoints && layersByWrapper.size > 0
+      && canObserve && typeof window.requestAnimationFrame === 'function';
     if (!eligible) {
       stopParallax();
       return;
     }
-    if (parallaxEnabled) return;
-
+    if (parallaxEnabled) {
+      requestParallaxFrame();
+      return;
+    }
     try {
-      layers.forEach((item) => {
-        const transform = window.getComputedStyle(item.layer).transform;
-        item.baseTransform = transform === 'none' ? '' : transform;
-      });
+      layersByWrapper.forEach(prepareLayer);
       parallaxObserver = new IntersectionObserver((entries) => {
         if (!parallaxEnabled) return;
         entries.forEach((entry) => {
@@ -185,7 +219,7 @@
         requestParallaxFrame();
       }, { threshold: 0 });
       parallaxEnabled = true;
-      layers.forEach((item) => parallaxObserver.observe(item.wrapper));
+      layersByWrapper.forEach((item) => parallaxObserver.observe(item.wrapper));
       window.addEventListener('scroll', requestParallaxFrame, { passive: true });
       window.addEventListener('resize', requestParallaxFrame, { passive: true });
     } catch {
@@ -193,29 +227,44 @@
     }
   }
 
+  function scanContent() {
+    scanReveals();
+    scanParallaxLayers();
+    updateParallax();
+  }
+
   function onPreferenceChange() {
-    if (reducedMotion.matches) cancelEntries();
+    if (reducedMotion.matches) {
+      cancelEntries();
+      revealPendingWithoutMotion();
+    }
     updateParallax();
   }
 
   [reducedMotion, desktopPointer].forEach((preference) => {
-    if (typeof preference.addEventListener === 'function') {
-      preference.addEventListener('change', onPreferenceChange);
-    } else if (typeof preference.addListener === 'function') {
-      preference.addListener(onPreferenceChange);
-    }
+    if (typeof preference.addEventListener === 'function') preference.addEventListener('change', onPreferenceChange);
+    else if (typeof preference.addListener === 'function') preference.addListener(onPreferenceChange);
   });
-
+  document.addEventListener('site:content-updated', scanContent);
+  document.addEventListener('site:menu-change', (event) => {
+    menuOpen = Boolean(event.detail && event.detail.open);
+    if (menuOpen) cancelEntries();
+    updateParallax();
+  });
+  document.addEventListener('site:dialog-change', (event) => {
+    dialogOpen = Boolean(event.detail && event.detail.open);
+    if (dialogOpen) cancelEntries();
+    updateParallax();
+  });
   document.addEventListener('visibilitychange', () => {
-    if (document.hidden) {
-      cancelEntries();
-      if (frame !== null) window.cancelAnimationFrame(frame);
-      frame = null;
-      layers.forEach(restoreLayer);
-    } else {
-      requestParallaxFrame();
-    }
+    if (document.hidden) cancelEntries();
+    updateParallax();
   });
+  window.addEventListener('pagehide', () => {
+    cancelEntries();
+    stopParallax();
+  });
+  window.addEventListener('pageshow', scanContent);
 
-  updateParallax();
+  scanContent();
 })();
