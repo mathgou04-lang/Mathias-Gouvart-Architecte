@@ -7,15 +7,15 @@
   <meta name="theme-color" content="#151515">
   <link rel="icon" href="assets/favicon.png?v=06b71ad40363" type="image/png">
   <title>Gestion des projets — Mathias Gouvart Architecte</title>
-  <link rel="stylesheet" href="styles.css?v=c5ed2901f7ec">
-  <link rel="stylesheet" href="editor.css?v=0f1b9ed00f8b">
-  <script src="editor.js?v=28c37e739e9c" defer></script>
+  <link rel="stylesheet" href="styles.css?v=87c3ee45fe38">
+  <link rel="stylesheet" href="editor.css?v=866a3eb2b6cb">
+  <script src="editor.js?v=ac556416e1ff" defer></script>
 </head>
 <body class="editor-body">
   <a class="editor-skip" href="#editor-main">Aller à la gestion des projets</a>
   <header class="editor-header">
     <a class="editor-brand" href="index.html"><img class="editor-brand-logo" src="assets/logo-mathias-gouvart.webp?v=9c4d578878a4" width="155" height="126" alt="Mathias Gouvart Architecte"></a>
-    <a class="editor-site-link" href="index.html">Retour au site <span class="editor-arrow editor-arrow-diagonal" aria-hidden="true"></span></a>
+    <a class="editor-site-link" href="index.html">Retour au site</a>
   </header>
   <main id="editor-main" class="editor-main">
     <div class="editor-intro">
@@ -31,7 +31,7 @@
       <button class="editor-button editor-button-dark" id="editor-new" type="button" disabled>Nouveau projet <span aria-hidden="true">＋</span></button>
       <label class="editor-button editor-button-light" for="editor-import">Importer un fichier JSON</label>
       <input class="editor-file-input" id="editor-import" type="file" accept="application/json,.json" disabled>
-      <button class="editor-button editor-button-light" id="editor-export" type="button" disabled>Exporter les fichiers (.zip) <span class="editor-arrow editor-arrow-down" aria-hidden="true"></span></button>
+      <button class="editor-button editor-button-light" id="editor-export" type="button" disabled>Exporter les fichiers (.zip)</button>
     </div>
     <p id="editor-status" class="editor-status" role="status" aria-live="polite">Chargement des projets…</p>
     <div id="editor-error" class="editor-error" role="alert" hidden></div>
@@ -41,7 +41,7 @@
         <div id="editor-list" class="editor-list"></div>
       </section>
       <section class="editor-workspace" aria-labelledby="editor-form-title">
-        <div id="editor-empty" class="editor-empty"><span class="editor-arrow editor-arrow-diagonal" aria-hidden="true"></span><h2 class="editor-empty-title">Un projet, une histoire.</h2><p>Sélectionnez un projet pour le modifier ou créez-en un nouveau.</p></div>
+        <div id="editor-empty" class="editor-empty"><h2 class="editor-empty-title">Un projet, une histoire.</h2><p>Sélectionnez un projet pour le modifier ou créez-en un nouveau.</p></div>
         <form id="editor-form" class="editor-form" hidden>
           <div class="editor-section-heading"><h2 id="editor-form-title">Nouveau projet</h2><span class="editor-required-note">* Champs obligatoires</span></div>
           <div class="editor-fields-grid">
@@ -63,7 +63,7 @@
             <div class="editor-upload"><label class="editor-button editor-button-light" for="editor-images">Ajouter des photographies <span aria-hidden="true">＋</span></label><input class="editor-file-input" id="editor-images" type="file" multiple accept="image/jpeg,image/png,image/webp,image/avif,.jpg,.jpeg,.png,.webp,.avif"><span>Les images restent sur votre appareil jusqu’à l’export.</span></div>
             <div id="editor-gallery" class="editor-gallery"></div>
           </section>
-          <div class="editor-form-actions"><button class="editor-button editor-button-dark" type="submit">Enregistrer dans la sélection <span class="editor-arrow editor-arrow-diagonal" aria-hidden="true"></span></button><button id="editor-cancel" class="editor-button editor-button-light" type="button">Fermer la fiche</button></div>
+          <div class="editor-form-actions"><button class="editor-button editor-button-dark" type="submit">Enregistrer dans la sélection</button><button id="editor-cancel" class="editor-button editor-button-light" type="button">Fermer la fiche</button></div>
           <p class="editor-help">« Enregistrer » met à jour la sélection ci-contre. Cliquez ensuite sur « Exporter les fichiers » pour conserver votre travail.</p>
         </form>
       </section>

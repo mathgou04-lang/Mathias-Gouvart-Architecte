@@ -212,9 +212,6 @@
       content.append(node('p', 'editor-card-meta', options.join(' · ')));
       const actions = node('div', 'editor-card-actions');
       const edit = node('button', 'editor-card-action', 'Modifier');
-      const editArrow = node('span', 'editor-arrow editor-arrow-diagonal');
-      editArrow.setAttribute('aria-hidden', 'true');
-      edit.append(editArrow);
       edit.type = 'button';
       edit.setAttribute('aria-label', `Modifier ${project.title}`);
       edit.addEventListener('click', () => { if (mayDiscardForm()) openForm(project); });

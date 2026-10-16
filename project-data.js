@@ -85,22 +85,6 @@
     return element;
   }
 
-  function makeArrow() {
-    const namespace = 'http://www.w3.org/2000/svg';
-    const svg = document.createElementNS(namespace, 'svg');
-    svg.setAttribute('class', 'project-card-arrow');
-    svg.setAttribute('viewBox', '0 0 24 24');
-    svg.setAttribute('aria-hidden', 'true');
-    svg.setAttribute('focusable', 'false');
-    const path = document.createElementNS(namespace, 'path');
-    path.setAttribute('d', 'M5 19 19 5M5 5h14v14');
-    path.setAttribute('fill', 'none');
-    path.setAttribute('stroke', 'currentColor');
-    path.setAttribute('stroke-width', '1.5');
-    svg.append(path);
-    return svg;
-  }
-
   function makeCard(project, category) {
     const card = makeElement('a', 'project-card');
     card.href = projectUrl(project);
@@ -122,7 +106,6 @@
     title.dataset.textReveal = '';
     body.append(title);
     if (project.sample) body.append(makeElement('span', 'project-card-tag', 'Projet de démonstration'));
-    body.append(makeArrow());
     card.append(imageContainer, body);
     return card;
   }

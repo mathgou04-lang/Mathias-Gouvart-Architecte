@@ -6,11 +6,6 @@
 .editor-brand-wordmark > span:last-child { display: block; font-size: 9px; text-transform: uppercase; letter-spacing: .22em; margin-top: 6px; }
 .editor-site-link { font-size: 12px; display: flex; gap: 25px; align-items: center; }
 .editor-site-link span { font-size: 20px; }
-.editor-arrow { position: relative; display: inline-block; width: 15px; height: 15px; flex-shrink: 0; }
-.editor-arrow::before { content: ""; position: absolute; left: 0; top: 7px; height: 1px; width: 15px; background: currentColor; }
-.editor-arrow::after { content: ""; position: absolute; right: 1px; top: 3px; width: 8px; height: 8px; border-top: 1px solid currentColor; border-right: 1px solid currentColor; transform: rotate(45deg); }
-.editor-arrow-diagonal { transform: rotate(-45deg); }
-.editor-arrow-down { transform: rotate(90deg); }
 .editor-main { max-width: 1600px; margin: auto; padding: 70px 5vw 80px; }
 .editor-intro { max-width: 900px; }
 .editor-eyebrow { color: #565656; font-size: 10px; letter-spacing: .16em; text-transform: uppercase; margin-bottom: 20px; font-weight: 600; }
@@ -20,7 +15,7 @@
 .editor-notice strong { font-weight: 600; }
 .editor-notice p + p { margin-top: 5px; color: #5c5c5c; }
 .editor-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 30px; }
-.editor-button { min-height: 46px; border: 1px solid var(--editor-line); padding: 13px 18px; border-radius: 0; background: transparent; display: inline-flex; justify-content: center; align-items: center; gap: 25px; color: var(--editor-ink); font: inherit; font-size: 11px; line-height: 1.6; font-weight: 500; cursor: pointer; transition: background .2s, color .2s, border-color .2s; }
+.editor-button { min-height: 46px; border: 1px solid var(--editor-line); padding: 13px 18px; border-radius: 12px; background: transparent; display: inline-flex; justify-content: center; align-items: center; gap: 25px; color: var(--editor-ink); font: inherit; font-size: 11px; line-height: 1.6; font-weight: 500; cursor: pointer; transition: background .2s, color .2s, border-color .2s; }
 .editor-button-dark { background: var(--editor-ink); color: #fff; border-color: var(--editor-ink); }
 .editor-button-light:hover { background: #e8e8e8; border-color: #b5b5b5; }
 .editor-button-dark:hover { background: #3b3b3b; border-color: #3b3b3b; }
@@ -35,7 +30,7 @@
 .editor-section-heading h2, .editor-section-heading h3 { font-size: 19px; letter-spacing: -.025em; font-weight: 500; line-height: 1.4; }
 .editor-count, .editor-required-note { color: var(--editor-muted); font-size: 10px; font-weight: 400; white-space: nowrap; }
 .editor-list { display: grid; gap: 17px; }
-.editor-card { border: 1px solid var(--editor-line); background: #fafafa; }
+.editor-card { border-radius: 14px; overflow: hidden; border: 1px solid var(--editor-line); background: #fafafa; }
 .editor-card.is-selected { border-color: #4c4c4c; box-shadow: 0 0 0 1px #4c4c4c; }
 .editor-card-image { width: 100%; aspect-ratio: 1.8; object-fit: cover; background: #e2e2e2; }
 .editor-card-content { padding: 18px; }
@@ -44,12 +39,9 @@
 .editor-card-meta { color: var(--editor-muted); font-size: 10px; line-height: 1.7; margin-top: 8px; }
 .editor-card-actions { display: flex; align-items: center; justify-content: space-between; margin-top: 18px; gap: 12px; }
 .editor-card-action { padding: 5px 0; border: 0; background: transparent; color: var(--editor-ink); font: inherit; font-size: 11px; text-underline-offset: 4px; }
-.editor-card-action .editor-arrow { width: 12px; height: 12px; margin-left: 8px; vertical-align: -2px; }
-.editor-card-action .editor-arrow::before { width: 12px; top: 5px; }
-.editor-card-action .editor-arrow::after { width: 6px; height: 6px; top: 2px; }
 .editor-card-action:hover { text-decoration: underline; }
 .editor-card-action-delete { color: #8c594b; font-size: 10px; }
-.editor-empty { border: 1px solid var(--editor-line); padding: clamp(28px,5vw,72px); min-height: 330px; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; }
+.editor-empty { border-radius: 18px; border: 1px solid var(--editor-line); padding: clamp(28px,5vw,72px); min-height: 330px; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; }
 .editor-empty > span { color: var(--editor-accent); font-size: 36px; margin-bottom: 22px; }
 .editor-empty-title { font-size: clamp(26px,3vw,42px); font-weight: 400; letter-spacing: -.04em; line-height: 1.2; }
 .editor-empty p { margin-top: 20px; color: var(--editor-muted); font-size: 13px; line-height: 1.8; max-width: 350px; }
@@ -57,7 +49,7 @@
 .editor-field { display: flex; flex-direction: column; gap: 9px; min-width: 0; }
 .editor-field-full { grid-column: 1/-1; }
 .editor-field > label { font-size: 11px; font-weight: 600; }
-.editor-field input, .editor-field select, .editor-field textarea { width: 100%; min-width: 0; border: 1px solid #c9c9c9; padding: 12px 13px; background: #ffffff; color: var(--editor-ink); border-radius: 0; font: inherit; font-size: 13px; line-height: 1.7; }
+.editor-field input, .editor-field select, .editor-field textarea { width: 100%; min-width: 0; border: 1px solid #c9c9c9; padding: 12px 13px; background: #ffffff; color: var(--editor-ink); border-radius: 12px; font: inherit; font-size: 13px; line-height: 1.7; }
 .editor-field textarea { resize: vertical; min-height: 78px; }
 .editor-field input::placeholder, .editor-field textarea::placeholder { color: #858585; }
 .editor-field small, .editor-help { font-size: 10px; color: var(--editor-muted); line-height: 1.85; }
@@ -69,7 +61,7 @@
 .editor-upload { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; margin: 20px 0 26px; }
 .editor-upload > span { color: var(--editor-muted); font-size: 10px; line-height: 1.7; max-width: 240px; }
 .editor-gallery { display: grid; gap: 18px; }
-.editor-gallery-item { display: grid; grid-template-columns: 150px 1fr; gap: 20px; padding: 18px; background: #ececec; }
+.editor-gallery-item { border-radius: 14px; display: grid; grid-template-columns: 150px 1fr; gap: 20px; padding: 18px; background: #ececec; }
 .editor-gallery-image { width: 100%; aspect-ratio: 1.1; object-fit: cover; background: #dedede; }
 .editor-gallery-details { display: grid; gap: 12px; min-width: 0; }
 .editor-gallery-details .editor-field { gap: 5px; }
