@@ -108,3 +108,8 @@
 .editor-brand-name{word-spacing:.1em}
 .editor-brand-logo{display:block;width:125px;height:102px;object-fit:contain}.editor-header{padding-top:12px;padding-bottom:12px}.editor-body .editor-main{padding-top:42px}.editor-body .editor-title{font:400 clamp(30px,4vw,46px)/1.3 var(--sans);letter-spacing:-.035em}.editor-body .editor-main h2,.editor-body .editor-main h3{font-family:var(--sans)}
 @media(max-width:500px){.editor-brand-logo{width:105px;height:85px}.editor-header{padding-top:9px;padding-bottom:9px}.editor-body .editor-main{padding-top:30px}}
+
+/* Match the public stone and copper palette. */
+.editor-body{color:#3a2a21;--editor-ink:#633f2b;--editor-muted:#705947;--editor-line:#d9c6ae;--editor-accent:#9a613b;background:linear-gradient(130deg,#fffaf2,#f3e6d3 60%,#e8d2b3)}
+.editor-header{background:linear-gradient(110deg,#fffdf9,#f3e4ce)}.editor-eyebrow{color:#7c4a2d}.editor-notice{background:linear-gradient(110deg,#efe0ca,#e5cba9)}.editor-notice p+p{color:#644e3c}.editor-empty{background:linear-gradient(140deg,#fffaf3,#ead5b7)}
+.editor-button-dark{background:linear-gradient(110deg,#8d4d33,#6c3b2a);border-color:#805036}.editor-button-dark:hover{background:#78422c;border-color:#78422c}.editor-button-light:hover{background:#ead5b7;border-color:#b88d60}.editor-card{background:#fffaf3;border-color:#d8c2a7}.editor-card.is-selected{border-color:#986239;box-shadow:0 0 0 1px #986239}.editor-card-category{color:#805334}.editor-field input,.editor-field select,.editor-field textarea{background:#fffbf5;border-color:#cbb291}.editor-gallery-item{background:linear-gradient(120deg,#f0dfc7,#e6ccaa)}.editor-publish code{background:#e9d7bd}.editor-steps li::marker{color:#8a5432}

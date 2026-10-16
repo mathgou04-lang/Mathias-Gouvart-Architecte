@@ -66,7 +66,7 @@ def footer(cta=True):
 def page(path, title, desc, body, active='projects', main_attrs='', contact=False, cta=True):
     bootstrap = json.dumps(DATA, ensure_ascii=False, separators=(',', ':')).replace('<', '\\u003c')
     content = f'''<!doctype html>
-<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#151515">
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#74412f">
 <title>{e(title)} — Mathias Gouvart Architecte</title><meta name="description" content="{e(desc)}"><link rel="icon" href="{asset("assets/favicon.png")}" type="image/png"><link rel="stylesheet" href="{asset('styles.css')}">
 <meta property="og:title" content="{e(title)} — Mathias Gouvart Architecte"><meta property="og:description" content="{e(desc)}"><meta property="og:image" content="{PUBLIC}assets/architecture-hero.webp"><meta property="og:type" content="website"><meta property="og:locale" content="fr_BE">
 <script>document.documentElement.classList.add('js');</script>

@@ -15,3 +15,25 @@ html:not(.js) .site-header{position:relative}html:not(.js) .project-submenu{disp
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation:none!important;transition:none!important}.page-transition{display:none}}
 @media(forced-colors:active){.site-header{background:Canvas}.project-card-arrow,.arrow{color:CanvasText}}
 .home-intro-title,.studio-copy h2{word-spacing:.06em}
+
+/* Warm stone, sand and copper bring color to the compact portfolio. */
+:root{--paper:#fbf8f3;--white:#fffdf9;--ink:#2d241f;--charcoal:#30231e;--muted:#6b5646;--line:#dfcdb9;--accent:#92552f;--copper:#985c3d;--copper-dark:#74412f;--sand:#e7d2b6}
+:focus-visible{outline-color:var(--copper-dark)}::selection{background:#dfc49e;color:#302116}
+.site-header{background:linear-gradient(110deg,#fffdf9f5,#f7eee2f5)}.site-header.is-scrolled{background:#fffaf3fa;border-color:var(--line)}
+.navigation>a:after,.nav-projects-heading>a:after{background:#a16a3e}.navigation a[aria-current=page]{color:var(--copper-dark)}
+.project-submenu{background:#fffaf2;border-color:#dcc7ae;box-shadow:0 12px 35px #57351e12}.project-submenu a:hover{opacity:1;color:var(--copper-dark)}
+.text-link{color:var(--copper-dark);border-bottom-color:#b48659}.button-dark{background:linear-gradient(110deg,#8d4d33,#6c3b2a);color:#fffaf2}.button-dark:hover{background:linear-gradient(110deg,#9b5d3f,#7a4230)}.button-light{background:#fffaf2;color:var(--copper-dark);border-color:#cfb08a}.button-light:hover{background:#ead6b9}
+.home-intro{background:radial-gradient(ellipse at 95% 10%,#c8996c99,transparent 64%),linear-gradient(115deg,#fffaf2,#f1e2cc 58%,#dfc1a2);border-bottom:1px solid #dfc8ae}
+.home-intro-title{color:#38291f}.home-profession{color:#85512f}.home-intro-copy{color:#573d30}
+.section-heading h2,.project-card-title{color:#3a2a21}.project-card-image{background:#e3ccb4}.project-card-body{border-top:2px solid #b48957}.project-card-category{color:#725642}.project-card-tag,.sample-note{color:#75614f}.project-card-arrow,.project-card-body>.arrow{color:#8a4d2f;opacity:.8}
+.home-studio{background:linear-gradient(105deg,#faf5ed,#f1e2cf);border-top-color:#dfc8ae}.home-studio h2{color:#513624}.home-studio>div>p{color:#635044}
+.contact-invitation{background:linear-gradient(112deg,#81482f,#985c3d 45%,#6a3a2e);color:#fff8ed}.contact-invitation .eyebrow{color:#fff1df}.contact-invitation .text-link{color:#fff8ed;border-bottom-color:#e5c9a5}
+.site-footer{background:linear-gradient(180deg,#fffdf9,#f2e7d8)}.footer-contact,.footer-top nav{color:#624b3c}.footer-top nav a:hover,.footer-contact a:hover{opacity:1;color:#8a4d2f}.footer-bottom{border-top-color:#ddcbb5;color:#745d49}
+.page-heading{background:linear-gradient(110deg,#fffdf9,#ead8bf 70%,#d8b998)}.page-heading h1{color:#3b291f}.page-heading .eyebrow,.page-heading .page-lead{color:#5d4435}
+.portfolio-toolbar{border-bottom-color:var(--line)}.project-tabs a{color:#735947}.project-tabs a[aria-current]{color:#703a25}.project-tabs a[aria-current]:after{background:#a76b3e}.portfolio-count{color:#715b48}.portfolio-count span{color:#513523}
+.portrait-placeholder{background:radial-gradient(ellipse at 10% 0%,#fff9ed,transparent 66%),linear-gradient(135deg,#ead5b7,#dec1a0);border-color:#dbc3a6}.portrait-placeholder>p{color:#664731}.studio-role{color:#875335}.prose{color:#635044}
+.detail-cover,.gallery-item{background:#e7d5bf}.demo-badge{color:#755038;border-color:#cbaa84}.detail-summary,.back-link{color:#725a47}.gallery-caption{background:var(--paper);color:#735d4c}.next-project>a{border-top-color:var(--line);color:#63422d}
+.gallery-dialog{background:linear-gradient(135deg,#3a2b23,#191817);color:#fff8ef}.dialog-bottom p{color:#dfd1bf}.gallery-controls button{color:#fff8ef;border-color:#c6a47a70}
+.contact-intro h1,.contact-signature{color:#70432e}.contact-details .eyebrow{color:#74543c}.contact-signature span{color:#765b46}.contact-form-wrap{background:radial-gradient(ellipse at 100% 0%,#e8d1b4,transparent 62%),linear-gradient(130deg,#fffdf8,#eee1cd);border-color:#d9c4aa}.form-intro,.form-privacy{color:#645043}.form-field input,.form-field select,.form-field textarea{border-bottom-color:#b9a086;color:#3c2c22}.form-field input::placeholder,.form-field textarea::placeholder{color:#745d4c;opacity:1}.form-field input:focus,.form-field select:focus,.form-field textarea:focus{border-bottom-color:#855136}.form-field label span{color:#84512f}
+.page-transition{background:linear-gradient(135deg,#5b3426,#a76c48 45%,#29211d)}
+@media(forced-colors:active){.site-header,.home-intro,.page-heading,.contact-invitation,.site-footer{background:Canvas;color:CanvasText}.contact-invitation .text-link,.contact-invitation .eyebrow{color:CanvasText}}
