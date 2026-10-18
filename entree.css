@@ -7,7 +7,7 @@ a{color:inherit;text-decoration:none;touch-action:manipulation;-webkit-tap-highl
 img{display:block;max-width:100%}
 h1,p{margin:0}
 :focus-visible{outline:2px solid #fff;outline-offset:7px}
-::selection{color:#151515;background:#fff}
+::selection{color:#fff;background:#713b4e}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
 /* The image fills the view; the button alone determines the exact center. */
 .entry-scene{position:relative;isolation:isolate;width:100%;height:100vh;height:100svh;overflow:hidden;background:#222}
@@ -19,14 +19,14 @@ h1,p{margin:0}
 .entry-center{position:absolute;top:50%;left:50%;width:min(calc(100% - 44px),420px);height:52px;transform:translate(-50%,-50%);text-align:center}
 .entry-title{position:absolute;left:0;right:0;bottom:calc(100% + 29px);font-size:clamp(25px,2.1vw,32px);font-weight:500;line-height:1.2;letter-spacing:-.035em;text-shadow:0 2px 20px #00000055}
 .entry-title span{display:block;margin-top:9px;font-size:12px;font-weight:400;line-height:1.5;letter-spacing:.13em;text-transform:uppercase}
-.entry-button{display:flex;align-items:center;justify-content:center;width:138px;min-height:52px;margin-inline:auto;padding:13px 24px;border:1px solid #fff;border-radius:8px;background:#fff;color:#151515;font-size:13px;font-weight:600;line-height:1.5;letter-spacing:.025em;box-shadow:0 6px 30px #0000000a;transition:background .3s,color .3s,box-shadow .3s}
-.entry-button:hover{background:#ececec;border-color:#ececec;box-shadow:0 8px 32px #00000020}
+.entry-button{display:flex;align-items:center;justify-content:center;width:138px;min-height:52px;margin-inline:auto;padding:13px 24px;border:1px solid #ffffffb3;border-radius:8px;background:#263d59;color:#fff;font-size:13px;font-weight:600;line-height:1.5;letter-spacing:.025em;box-shadow:0 6px 30px #0000000a;transition:background .3s,color .3s,box-shadow .3s}
+.entry-button:hover{background:#713b4e;border-color:#ffffffb3;box-shadow:0 8px 32px #17283c40}
 .entry-location,.entry-caption,.entry-contact{position:absolute;font-size:12px;line-height:1.6;text-shadow:0 1px 8px #00000050}
 .entry-location{left:var(--entry-inset);bottom:var(--entry-inset)}
 .entry-caption{left:50%;bottom:var(--entry-inset);transform:translateX(-50%);color:#eee;font-size:11px;white-space:nowrap}
 .entry-contact{right:var(--entry-inset);bottom:calc(var(--entry-inset) - 8px);padding-block:8px;text-decoration:underline;text-underline-offset:5px;text-decoration-thickness:1px;text-decoration-color:#ffffff88;transition:text-decoration-color .3s}
 .entry-contact:hover{text-decoration-color:#fff}
-.entry-transition{position:fixed;inset:0;z-index:10;pointer-events:none;background:#151515;opacity:0}
+.entry-transition{position:fixed;inset:0;z-index:10;pointer-events:none;background:linear-gradient(135deg,#263d59,#1c2536 60%,#713b4e);opacity:0}
 @media(max-width:650px){
  :root{--entry-inset:24px}
  .entry-brand{padding:6px 10px;border-radius:8px}

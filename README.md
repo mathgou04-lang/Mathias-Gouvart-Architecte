@@ -26,7 +26,9 @@ Le générateur déterministe produit **14 pages HTML**, plus `sitemap.xml` et `
 - `mentions-legales.html`, `confidentialite.html` : informations de l’éditeur, des contenus et du formulaire.
 - `gestion.html` : préparation locale des projets par le propriétaire, hors indexation.
 
-Direction confirmée : noir et blanc, photographies en couleur, fondus de gris, contours doux et compositions légèrement décalées. Menu Accueil / Projets / Le bureau / Contact visible et centré sur ordinateur comme sur téléphone. Pas de flèches décoratives répétées ; seules les commandes de galerie et le chevron de catégories sont conservés. Les petits textes ont été rendus plus lisibles. La perspective plein écran concerne seulement l’entrée, conformément à la demande ; les autres pages gardent des images contenues.
+Direction actuelle : base claire et texte sombre, avec des accents bleu encre et bordeaux, des fonds bleu brume et rose froid très pâle, et des fondus de couleurs. Cette évolution répond à la demande de rendre le site moins monotone. Les photographies gardent leurs couleurs, sans filtre de recoloration ; le logo noir et doré reste intact. Le vert et l’ancienne palette cuivre/sable ne sont pas repris.
+
+Les deux catégories de l’accueil utilisent des cartes éditoriales colorées, plutôt que de répéter les photographies déjà présentes dans les projets. Les fonds, proportions et traitements des sections varient. Contours doux et légers décalages sont conservés. Menu Accueil / Projets / Le bureau / Contact visible et centré sur ordinateur comme sur téléphone. Pas de flèches décoratives répétées ; seules les commandes de galerie et le chevron de catégories restent présentes. La perspective plein écran concerne seulement l’entrée ; les autres pages gardent des images contenues.
 
 Logo complet corrigé : `assets/logo-mathias-gouvart.webp` (lignes/textes noirs, MG et barres dorés, fond transparent). Le favicon PNG en dérive. Ne pas remplacer le logo par une nouvelle création. Le fichier a été préparé depuis l’image fournie ; préférer un original vectoriel si Mathias le transmet. Manrope et Cormorant Garamond sont auto-hébergées avec leurs licences SIL OFL.
 
