@@ -9,7 +9,7 @@
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
   // Native document transitions are shared with every interior page. In that
   // case the anchor must remain native so the browser owns the whole change.
-  const nativeTransitions = 'onpageswap' in window && 'onpagereveal' in window &&
+  const nativeTransitions = window.top === window && 'onpageswap' in window && 'onpagereveal' in window &&
     typeof CSS !== 'undefined' && CSS.supports('view-transition-name', 'none');
   const animations = new Set();
   let leaving = false;

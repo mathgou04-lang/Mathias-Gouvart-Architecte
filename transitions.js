@@ -3,7 +3,7 @@
 
   const reduced = typeof matchMedia === 'function'
     ? matchMedia('(prefers-reduced-motion: reduce)') : { matches: true };
-  const nativeTransitions = 'onpageswap' in window && 'onpagereveal' in window
+  const nativeTransitions = window.top === window && 'onpageswap' in window && 'onpagereveal' in window
     && typeof CSS !== 'undefined' && CSS.supports('view-transition-name', 'none');
   const shared = new Set();
   const activeTransitions = new Set();

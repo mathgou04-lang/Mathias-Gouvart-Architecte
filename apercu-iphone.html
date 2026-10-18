@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="theme-color" content="#eeede9">
+  <title>Aperçu iPhone — Mathias Gouvart Architecte</title>
+  <link rel="icon" href="assets/favicon.png?v=06b71ad40363" type="image/png">
+  <link rel="stylesheet" href="iphone-preview.css?v=e426f5c9236b">
+  <script src="iphone-preview.js?v=96bbe3895451" defer></script>
+</head>
+<body class="preview-page">
+  <main class="preview-layout">
+    <section class="preview-intro">
+      <p class="eyebrow">Mathias Gouvart Architecte</p>
+      <h1>Le site,<br> dans un iPhone.</h1>
+      <p>Cliquez sur « Entrer », faites défiler les pages et explorez les projets directement dans le téléphone.</p>
+      <div class="preview-actions">
+        <button id="restart-preview" type="button">Revenir à l’entrée</button>
+        <a href="index.html" target="_blank" rel="noopener">Ouvrir le site</a>
+      </div>
+      <p class="preview-note">Aperçu interactif au format iPhone. Sur ordinateur, placez votre souris dans l’écran pour faire défiler le site.</p>
+    </section>
+    <section class="device-stage" aria-label="iPhone interactif">
+      <div class="device-shell">
+        <div class="device-screen">
+          <div class="device-status" aria-hidden="true">
+            <span class="clock">9:41</span>
+            <span class="dynamic-island"></span>
+            <span class="status-icons">
+              <svg width="17" height="13" viewBox="0 0 17 13"><path d="M1 12V9h2v3zm4 0V6h2v6zm4 0V3h2v9zm4 0V0h2v12z" fill="currentColor"/></svg>
+              <svg width="17" height="13" viewBox="0 0 18 14"><path d="M1 4.5a12 12 0 0 1 16 0M4 7.5a7.5 7.5 0 0 1 10 0M7 10.5a3 3 0 0 1 4 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="9" cy="13" r="1" fill="currentColor"/></svg>
+              <svg width="25" height="13" viewBox="0 0 27 14"><rect x=".5" y=".5" width="23" height="12" rx="3" fill="none" stroke="currentColor" opacity=".5"/><rect x="2.5" y="2.5" width="19" height="8" rx="1" fill="currentColor"/><path d="M25 4v5" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".5"/></svg>
+            </span>
+          </div>
+          <div class="device-webview">
+            <iframe id="site-frame" src="index.html" title="Site Mathias Gouvart Architecte au format iPhone"></iframe>
+          </div>
+          <div class="safari-bar">
+            <div class="safari-address">
+              <span class="address-label">
+                <svg width="11" height="13" viewBox="0 0 12 14" aria-hidden="true"><path d="M3 6V4a3 3 0 0 1 6 0v2" fill="none" stroke="currentColor" stroke-width="1.4"/><rect x="1" y="6" width="10" height="7" rx="2" fill="currentColor"/></svg>
+                <span id="preview-address">mathgou04-lang.github.io</span>
+              </span>
+              <button id="reload-preview" type="button" aria-label="Actualiser la page dans l’iPhone">
+                <svg width="19" height="19" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7v5h-5M20 12a8 8 0 1 0-2 5.3" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+            </div>
+            <nav class="safari-controls" aria-label="Navigation dans l’iPhone">
+              <button id="back-preview" type="button" aria-label="Page précédente dans l’iPhone" disabled><svg width="21" height="21" viewBox="0 0 24 24" aria-hidden="true"><path d="m14.5 4-8 8 8 8" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+              <button id="forward-preview" type="button" aria-label="Page suivante dans l’iPhone" disabled><svg width="21" height="21" viewBox="0 0 24 24" aria-hidden="true"><path d="m9.5 4 8 8-8 8" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+              <button id="home-preview" type="button" aria-label="Accueil du site dans l’iPhone"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7M5.5 8.5V21H10v-6h4v6h4.5V8.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+              <a id="open-site" href="index.html" target="_blank" rel="noopener" aria-label="Ouvrir cette page du site dans un nouvel onglet"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3h7v7M21 3 11 13M10 5H4v16h16v-6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+            </nav>
+            <div class="home-indicator" aria-hidden="true"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <p id="preview-status" class="sr-only" role="status" aria-live="polite"></p>
+  </main>
+</body>
+</html>

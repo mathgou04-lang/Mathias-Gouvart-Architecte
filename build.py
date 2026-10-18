@@ -179,11 +179,17 @@ if __name__ == '__main__':
     contact_page()
     render_legal_pages(SITE, page)
     write_search_files(ROOT, PUBLIC, OUTPUT)
-    # Refresh the independent owner utility without changing its markup.
-    owner = ROOT / 'gestion.html'
-    if owner.exists():
-        source = owner.read_text()
-        for name in ('styles.css', 'editor.css', 'editor.js', 'assets/logo-mathias-gouvart.webp', 'assets/favicon.png'):
+    # Refresh independent utilities without changing their markup.
+    utilities = {
+        'gestion.html': ('styles.css', 'editor.css', 'editor.js', 'assets/logo-mathias-gouvart.webp', 'assets/favicon.png'),
+        'apercu-iphone.html': ('iphone-preview.css', 'iphone-preview.js', 'assets/favicon.png'),
+    }
+    for filename, resources in utilities.items():
+        utility = ROOT / filename
+        if not utility.exists():
+            continue
+        source = utility.read_text()
+        for name in resources:
             source = re.sub(r'((?:src|href)="' + re.escape(name) + r')(?:\?v=[^"]*)?"', lambda m: m[1] + '?v=' + asset(name).split('?v=')[1] + '"', source)
-        owner.write_text(source)
+        utility.write_text(source)
     print('Generated ' + str(len(OUTPUT)) + ' pages: ' + ', '.join(OUTPUT))
