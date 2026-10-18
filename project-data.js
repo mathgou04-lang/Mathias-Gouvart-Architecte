@@ -13,6 +13,13 @@
   const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
   const IMAGE = /^assets\/(?:[a-z0-9_-]+\/)*[a-z0-9_-]+\.(?:avif|jpe?g|png|webp|svg)$/i;
   const HTML_PAGE = /^[a-z0-9]+(?:-[a-z0-9]+)*\.html$/;
+  const DOSSIER_FIELDS = Object.freeze([
+    ['context', 'Contexte'],
+    ['approach', 'Parti architectural'],
+    ['details', 'Matières et détails']
+  ]);
+  const OPTIONAL_TEXT_LIMITS = Object.freeze({ context: 10000, approach: 10000, details: 10000, mission: 120, stage: 80 });
+  const SAMPLE_LABEL = 'Étude d’intention — images d’ambiance';
   let lastSignature = '';
 
   const isRecord = value => value !== null && typeof value === 'object' && !Array.isArray(value);
@@ -38,6 +45,9 @@
       if (!isText(project.location, true) || !isText(project.year, true) || typeof project.sample !== 'boolean' || typeof project.featured !== 'boolean') return null;
       if (!isText(project.cover) || !IMAGE.test(project.cover) || !isText(project.coverAlt) || !Array.isArray(project.gallery)) return null;
       if (project.page !== undefined && (!isText(project.page) || !HTML_PAGE.test(project.page))) return null;
+      for (const [field, maxLength] of Object.entries(OPTIONAL_TEXT_LIMITS)) {
+        if (project[field] !== undefined && (!isText(project[field], true) || project[field].length > maxLength)) return null;
+      }
 
       const gallery = [];
       for (const item of project.gallery) {
@@ -60,6 +70,7 @@
         coverAlt: project.coverAlt,
         gallery
       };
+      for (const field of Object.keys(OPTIONAL_TEXT_LIMITS)) copy[field] = (project[field] || '').trim();
       if (project.page !== undefined) copy.page = project.page;
       projects.push(copy);
     }
@@ -105,7 +116,7 @@
     const title = makeElement('h3', 'project-card-title', project.title);
     title.dataset.textReveal = '';
     body.append(title);
-    if (project.sample) body.append(makeElement('span', 'project-card-tag', 'Projet de démonstration'));
+    if (project.sample) body.append(makeElement('span', 'project-card-tag', SAMPLE_LABEL));
     card.append(imageContainer, body);
     return card;
   }
@@ -115,6 +126,8 @@
   }
 
   function renderHomeHero(data, categoryMap) {
+    const selectionTitle = document.querySelector('[data-project-selection-title]');
+    if (selectionTitle) selectionTitle.textContent = data.projects.some(project => !project.sample) ? 'Sélection de projets' : 'Études et intentions';
     const hero = document.querySelector('[data-home-project]');
     if (!hero) return;
     const project = data.projects.find(item => item.featured);
@@ -128,7 +141,7 @@
     const category = hero.querySelector('[data-home-project-category]');
     if (category) category.textContent = categoryMap.get(project.category).label;
     const status = hero.querySelector('[data-home-project-status]');
-    if (status) { status.hidden = !project.sample; status.textContent = project.sample ? 'Projet de démonstration' : ''; }
+    if (status) { status.hidden = !project.sample; status.textContent = project.sample ? SAMPLE_LABEL : ''; }
   }
 
   function renderLists(data, categoryMap) {
@@ -152,6 +165,11 @@
       const count = data.projects.filter(project => !category || project.category === category).length;
       counter.textContent = String(count).padStart(2, '0');
     });
+    document.querySelectorAll('[data-project-count-label]').forEach(label => {
+      const category = categoryForNode(label);
+      const count = data.projects.filter(project => !category || project.category === category).length;
+      label.textContent = count === 1 ? 'projet' : 'projets';
+    });
   }
 
   function setText(root, selector, text) {
@@ -163,8 +181,30 @@
       const fragment = document.createDocumentFragment();
       if (project.location.trim()) fragment.append(makeElement('dt', '', 'Lieu'), makeElement('dd', '', project.location));
       if (project.year.trim()) fragment.append(makeElement('dt', '', 'Année'), makeElement('dd', '', project.year));
+      if (project.mission) fragment.append(makeElement('dt', '', 'Mission'), makeElement('dd', '', project.mission));
+      if (project.stage) fragment.append(makeElement('dt', '', 'Stade'), makeElement('dd', '', project.stage));
       meta.replaceChildren(fragment);
-      meta.hidden = !project.location.trim() && !project.year.trim();
+      meta.hidden = !project.location.trim() && !project.year.trim() && !project.mission && !project.stage;
+    });
+  }
+
+  function renderDossier(root, project) {
+    root.querySelectorAll('[data-project-dossier]').forEach(container => {
+      const fragment = document.createDocumentFragment();
+      for (const [field, label] of DOSSIER_FIELDS) {
+        if (!project[field]) continue;
+        const section = makeElement('section', 'project-dossier-section');
+        section.dataset.reveal = '';
+        const heading = makeElement('h3', '', label);
+        heading.dataset.textReveal = '';
+        section.append(heading);
+        project[field].split(/\n\s*\n/).map(paragraph => paragraph.trim()).filter(Boolean).forEach(paragraph => {
+          section.append(makeElement('p', '', paragraph));
+        });
+        fragment.append(section);
+      }
+      container.replaceChildren(fragment);
+      container.hidden = !DOSSIER_FIELDS.some(([field]) => project[field]);
     });
   }
 
@@ -225,7 +265,7 @@
       node.replaceChildren(fragment);
     });
     root.querySelectorAll('[data-project-status]').forEach(node => {
-      node.textContent = project.sample ? 'Projet de démonstration' : '';
+      node.textContent = project.sample ? SAMPLE_LABEL : '';
       node.hidden = !project.sample;
     });
     root.querySelectorAll('[data-project-cover]').forEach(photo => {
@@ -234,6 +274,7 @@
         photo.alt = project.coverAlt;
       }
     });
+    renderDossier(root, project);
     renderMeta(root, project);
     renderGallery(root, project);
 

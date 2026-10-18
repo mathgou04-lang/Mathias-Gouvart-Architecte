@@ -20,9 +20,7 @@
       "page": "projet-maison-horizon.html",
       "summary": "Des volumes précis, une lumière généreuse et une relation ouverte au paysage.",
       "description": [
-        "Ce projet de démonstration présente une intention architecturale fictive. Il illustre la manière dont une construction neuve pourrait articuler des volumes simples, des perspectives et des espaces de vie baignés de lumière.",
-        "La composition explore une continuité entre l’intérieur et l’extérieur. Les matières sobres, les lignes horizontales et les ouvertures cadrées composent une atmosphère calme et chaleureuse.",
-        "Cette page sera remplacée par un projet réel, avec son contexte, les choix architecturaux et les photographies de sa réalisation. Les visuels présentés sont des images d’ambiance et ne représentent pas une réalisation du bureau."
+        "Étude fictive d’une maison ouverte sur le paysage. Les visuels sont des images d’ambiance et ne représentent pas une réalisation du bureau."
       ],
       "location": "",
       "year": "",
@@ -41,7 +39,12 @@
           "alt": "Image d’ambiance d’un intérieur contemporain lumineux aux matières sobres.",
           "caption": "Lumière et espaces de vie — image d’ambiance"
         }
-      ]
+      ],
+      "context": "Le scénario imagine une habitation où les pièces communes profitent de vues dégagées, tandis que les espaces de repos préservent leur intimité. Il explore la relation entre les usages quotidiens et les espaces extérieurs, sans site réel défini.",
+      "approach": "Deux volumes simples permettraient de distinguer les espaces de jour et de nuit. Une circulation lisible relierait l’entrée aux pièces de vie ; des ouvertures cadrées prolongeraient les perspectives vers l’extérieur et moduleraient la lumière au fil du parcours.",
+      "details": "Une palette sobre de bois, de surfaces minérales et de teintes claires accompagnerait les lignes horizontales. Le soin des seuils, des embrasures et des raccords entre sols chercherait à donner une continuité aux espaces.",
+      "mission": "",
+      "stage": ""
     },
     {
       "id": "maison-lumiere",
@@ -50,9 +53,7 @@
       "page": "projet-maison-lumiere.html",
       "summary": "Révéler le potentiel de l’existant et donner une nouvelle place à la lumière.",
       "description": [
-        "Ce projet de démonstration imagine la transformation d’une habitation. Il s’agit d’une étude fictive destinée à présenter le format des futures pages de projets du bureau.",
-        "L’intention consiste à repenser les circulations, à ouvrir les pièces de vie et à mettre en dialogue le caractère de l’existant avec une intervention contemporaine mesurée.",
-        "Les images explorent une ambiance et des rapports de matières. Elles ne documentent pas un chantier ou une réalisation de Mathias Gouvart Architecte. Les photographies, les plans et la description d’un projet réel pourront prendre leur place ici."
+        "Étude fictive de transformation d’une habitation, guidée par la lumière et les usages. Les images d’ambiance ne documentent ni un chantier ni une réalisation du bureau."
       ],
       "location": "",
       "year": "",
@@ -71,7 +72,12 @@
           "alt": "Image d’ambiance montrant un détail de matières et de lumière dans un espace rénové.",
           "caption": "Matières et détails — image d’ambiance"
         }
-      ]
+      ],
+      "context": "Le scénario part d’une maison imaginaire dont les pièces de vie seraient cloisonnées et les parcours peu lisibles. L’enjeu serait de rapprocher les usages communs tout en conservant des espaces calmes et des transitions vers les pièces privées.",
+      "approach": "La réflexion propose de regrouper les pièces de vie autour d’un espace traversant et de réduire les détours entre l’entrée, la cuisine et le séjour. Des percées visuelles et des ouvertures mesurées permettraient à la lumière de pénétrer plus loin dans l’habitation.",
+      "details": "Les intentions associent des surfaces existantes conservées à des éléments de bois clair et à des finitions minérales. Des seuils continus, des rangements intégrés et des encadrements sobres rendraient l’intervention contemporaine lisible sans multiplier les matières.",
+      "mission": "",
+      "stage": ""
     },
     {
       "id": "appartement-matiere",
@@ -80,9 +86,7 @@
       "page": "projet-appartement-matiere.html",
       "summary": "Une transformation intérieure guidée par les proportions, les matières et le détail.",
       "description": [
-        "Ce projet de démonstration propose une réflexion fictive sur la transformation d’un intérieur. Il sert d’exemple pour accueillir, à terme, les projets et les descriptions du bureau.",
-        "L’approche explore une palette de matières retenue, des lignes continues et des détails soignés. Les éléments de circulation deviennent des pièces de composition qui structurent les vues et accompagnent les usages.",
-        "Ces visuels sont des images d’ambiance, sans lien avec une réalisation effective du bureau. Cette galerie pourra être enrichie de photographies, de plans et de détails pour raconter un véritable projet."
+        "Étude fictive d’un intérieur composé autour des circulations et des matières. Les visuels sont des images d’ambiance, sans lien avec une réalisation effective du bureau."
       ],
       "location": "",
       "year": "",
@@ -101,7 +105,12 @@
           "alt": "Image d’ambiance d’un détail d’escalier contemporain et de sa rencontre avec la lumière.",
           "caption": "Le soin du détail — image d’ambiance"
         }
-      ]
+      ],
+      "context": "Le scénario explore un intérieur imaginaire où les circulations occupent une place importante. Il cherche à leur donner un usage et une qualité spatiale, tout en préservant des pièces faciles à meubler et des vues dégagées.",
+      "approach": "Un parcours continu articulerait l’entrée, les espaces communs et les pièces plus intimes. Des volumes de rangement serviraient de repères et filtreraient les vues ; les différences de lumière aideraient à marquer les transitions sans ajouter de cloisons systématiques.",
+      "details": "Une palette limitée de bois, de métal et de surfaces minérales mettrait l’accent sur les proportions. Les prises en main, les chants et les raccords de matériaux seraient traités avec retenue pour accompagner les gestes quotidiens.",
+      "mission": "",
+      "stage": ""
     }
   ]
 }

@@ -7,15 +7,15 @@
   <meta name="theme-color" content="#151515">
   <link rel="icon" href="assets/favicon.png?v=06b71ad40363" type="image/png">
   <title>Gestion des projets — Mathias Gouvart Architecte</title>
-  <link rel="stylesheet" href="styles.css?v=87c3ee45fe38">
+  <link rel="stylesheet" href="styles.css?v=2d5e4fc9e009">
   <link rel="stylesheet" href="editor.css?v=866a3eb2b6cb">
-  <script src="editor.js?v=ac556416e1ff" defer></script>
+  <script src="editor.js?v=2dd8683712d6" defer></script>
 </head>
 <body class="editor-body">
   <a class="editor-skip" href="#editor-main">Aller à la gestion des projets</a>
   <header class="editor-header">
-    <a class="editor-brand" href="index.html"><img class="editor-brand-logo" src="assets/logo-mathias-gouvart.webp?v=9c4d578878a4" width="155" height="126" alt="Mathias Gouvart Architecte"></a>
-    <a class="editor-site-link" href="index.html">Retour au site</a>
+    <a class="editor-brand" href="accueil.html"><img class="editor-brand-logo" src="assets/logo-mathias-gouvart.webp?v=9c4d578878a4" width="155" height="126" alt="Mathias Gouvart Architecte"></a>
+    <a class="editor-site-link" href="accueil.html">Retour au site</a>
   </header>
   <main id="editor-main" class="editor-main">
     <div class="editor-intro">
@@ -49,13 +49,18 @@
             <div class="editor-field"><label for="editor-id">Identifiant du projet *</label><input id="editor-id" name="id" required maxlength="80" pattern="[a-z0-9]+(-[a-z0-9]+)*" autocomplete="off" aria-describedby="editor-id-help"><small id="editor-id-help">Lettres minuscules, chiffres et tirets. Il fait partie du lien du projet.</small></div>
             <div class="editor-field"><label for="editor-category">Catégorie *</label><select id="editor-category" name="category" required><option value="constructions-neuves">Constructions neuves</option><option value="renovations-transformations">Rénovations / Transformations</option></select></div>
             <div class="editor-field editor-field-full"><label for="editor-summary">Présentation courte *</label><textarea id="editor-summary" name="summary" rows="2" maxlength="500" required placeholder="Une ou deux phrases pour présenter le projet dans la liste."></textarea></div>
-            <div class="editor-field editor-field-full"><label for="editor-description">Description du projet *</label><textarea id="editor-description" name="description" rows="8" maxlength="30000" required aria-describedby="editor-description-help" placeholder="Le contexte, vos intentions, les matières, la lumière…"></textarea><small id="editor-description-help">Séparez les paragraphes par une ligne vide.</small></div>
+            <div class="editor-field editor-field-full"><label for="editor-description">Présentation du projet *</label><textarea id="editor-description" name="description" rows="4" maxlength="30000" required aria-describedby="editor-description-help" placeholder="Présentez le projet et son intention générale."></textarea><small id="editor-description-help">Séparez les paragraphes par une ligne vide. Les rubriques facultatives ci-dessous permettent de développer le dossier sans répéter cette présentation.</small></div>
+            <div class="editor-field editor-field-full"><label for="editor-context">Contexte (facultatif)</label><textarea id="editor-context" name="context" rows="4" maxlength="10000" aria-describedby="editor-dossier-help" placeholder="La situation de départ, les usages, les contraintes du site ou de l’existant."></textarea><small id="editor-dossier-help">Seules les rubriques renseignées apparaissent sur la fiche. Séparez les paragraphes par une ligne vide.</small></div>
+            <div class="editor-field editor-field-full"><label for="editor-approach">Parti architectural (facultatif)</label><textarea id="editor-approach" name="approach" rows="4" maxlength="10000" placeholder="Les choix de volumes, de circulation et de lumière."></textarea></div>
+            <div class="editor-field editor-field-full"><label for="editor-details">Matières et détails (facultatif)</label><textarea id="editor-details" name="details" rows="4" maxlength="10000" placeholder="Les matières, les assemblages et les détails qui accompagnent les usages."></textarea></div>
             <div class="editor-field"><label for="editor-location">Localisation</label><input id="editor-location" name="location" maxlength="120" autocomplete="off" placeholder="Ville ou région"></div>
             <div class="editor-field"><label for="editor-year">Année</label><input id="editor-year" name="year" maxlength="40" autocomplete="off" placeholder="Ex. 2026 ou En cours"></div>
+            <div class="editor-field"><label for="editor-mission">Mission (facultatif)</label><input id="editor-mission" name="mission" maxlength="120" autocomplete="off" placeholder="Ex. Étude de faisabilité, mission complète"></div>
+            <div class="editor-field"><label for="editor-stage">Stade (facultatif)</label><input id="editor-stage" name="stage" maxlength="80" autocomplete="off" placeholder="Ex. Étude, chantier, livré"></div>
           </div>
           <div class="editor-toggles">
             <label class="editor-check"><input id="editor-featured" type="checkbox" name="featured"><span>Mettre en avant sur l’accueil</span></label>
-            <label class="editor-check"><input id="editor-sample" type="checkbox" name="sample"><span>Projet de démonstration / images d’ambiance</span></label>
+            <label class="editor-check"><input id="editor-sample" type="checkbox" name="sample"><span>Étude fictive / images d’ambiance</span></label>
           </div>
           <section class="editor-gallery-section" aria-labelledby="editor-gallery-title">
             <div class="editor-section-heading"><h3 id="editor-gallery-title">Photographies *</h3><span id="editor-gallery-count" class="editor-count">0 image</span></div>

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+Disallow: /Mathias-Gouvart-Architecte/gestion.html
+Sitemap: https://mathgou04-lang.github.io/Mathias-Gouvart-Architecte/sitemap.xml

@@ -121,6 +121,11 @@
       id, title: textValue(value.title, 'Nom du projet', 120, true), category: value.category,
       summary: textValue(value.summary, 'Présentation courte', 500, true), description,
       location: textValue(value.location ?? '', 'Localisation', 120), year: textValue(value.year ?? '', 'Année', 40),
+      context: textValue(value.context === undefined ? '' : value.context, 'Contexte', 10000),
+      approach: textValue(value.approach === undefined ? '' : value.approach, 'Parti architectural', 10000),
+      details: textValue(value.details === undefined ? '' : value.details, 'Matières et détails', 10000),
+      mission: textValue(value.mission === undefined ? '' : value.mission, 'Mission', 120),
+      stage: textValue(value.stage === undefined ? '' : value.stage, 'Stade', 80),
       sample: value.sample, featured: value.featured, cover: value.cover,
       coverAlt: textValue(value.coverAlt || checkedGallery.find(image => image.src === value.cover).alt, 'Description de la couverture', 500, true),
       gallery: checkedGallery
@@ -208,7 +213,7 @@
       content.append(node('h3', 'editor-card-title', project.title));
       const options = [`${project.gallery.length} image${project.gallery.length === 1 ? '' : 's'}`];
       if (project.featured) options.push('À l’accueil');
-      if (project.sample) options.push('Démonstration');
+      if (project.sample) options.push('Étude fictive');
       content.append(node('p', 'editor-card-meta', options.join(' · ')));
       const actions = node('div', 'editor-card-actions');
       const edit = node('button', 'editor-card-action', 'Modifier');
@@ -242,8 +247,8 @@
     setError('');
     editingId = project ? project.id : null;
     autoId = !project;
-    const values = project || { title: '', id: '', category: 'constructions-neuves', summary: '', description: [], location: '', year: '', featured: false, sample: false, gallery: [] };
-    for (const field of ['title', 'id', 'category', 'summary', 'location', 'year']) element(field).value = values[field];
+    const values = project || { title: '', id: '', category: 'constructions-neuves', summary: '', description: [], location: '', year: '', context: '', approach: '', details: '', mission: '', stage: '', featured: false, sample: false, gallery: [] };
+    for (const field of ['title', 'id', 'category', 'summary', 'location', 'year', 'context', 'approach', 'details', 'mission', 'stage']) element(field).value = values[field] || '';
     element('description').value = values.description.join('\n\n');
     element('featured').checked = values.featured;
     element('sample').checked = values.sample;
@@ -387,6 +392,8 @@
         summary: element('summary').value,
         description: element('description').value.trim().split(/\n\s*\n/).map(paragraph => paragraph.trim()).filter(Boolean),
         location: element('location').value, year: element('year').value,
+        context: element('context').value, approach: element('approach').value, details: element('details').value,
+        mission: element('mission').value, stage: element('stage').value,
         featured: element('featured').checked, sample: element('sample').checked,
         cover: savedGallery[coverIndex].src, coverAlt: savedGallery[coverIndex].alt,
         gallery: savedGallery

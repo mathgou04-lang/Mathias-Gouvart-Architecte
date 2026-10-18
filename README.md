@@ -1,88 +1,82 @@
 # Mathias Gouvart Architecte
 
-Site français à plusieurs pages, sans dépendance à installer. HTML, CSS et JavaScript natifs ; Python 3 génère les pages statiques initiales.
+Site français statique à plusieurs pages, sans dépendance applicative à installer. Python3 et sa bibliothèque standard génèrent le HTML ; CSS et JavaScript sont natifs. Images et polices sont auto-hébergées.
 
-## Développer
+## Développer et reprendre le site
 
-Depuis `/workspace/Mathias-Gouvart-Architecte` :
+Utiliser le checkout existant `/workspace/Mathias-Gouvart-Architecte`, sans créer de worktree. Lire les éventuels AGENTS.md et préserver les modifications locales. Les sources complètes sont publiées sur `gh-pages` ; `main` conserve son historique initial. Si une nouvelle instance ne contient que LICENSE, examiner ses refs puis reprendre les sources de `origin/gh-pages` dans une branche locale, sans écraser de travail existant.
 
 ```bash
 python3 build.py
 python3 -m http.server 8000 --bind 0.0.0.0
 ```
 
-Le serveur est nécessaire pour charger les contenus JSON. Une ouverture directe en `file://` conserve les pages statiques mais ne permet pas le rafraîchissement des projets ni l’éditeur. Les processus doivent être relancés dans une nouvelle tâche cloud. Utiliser le checkout existant ; ne pas créer de worktree sans demande explicite.
+Le serveur est nécessaire au chargement JSON et à l’éditeur. Les processus doivent être relancés après une reprise cloud. Si le port est occupé, vérifier le service existant avant toute action ; ne pas arrêter un service inconnu. Un socket et Chromium peuvent nécessiter les permissions de la plateforme. Ne pas partager localhost avec Mathias : utiliser le vrai lien public.
 
-`build.py` utilise uniquement la bibliothèque standard. Il régénère 11 pages et les versions des ressources CSS/JS. Les images et les polices Manrope et Cormorant Garamond sont auto-hébergées, avec leurs licences SIL OFL. La navigation du site ne requiert aucun service externe ; l’envoi du formulaire utilise FormSubmit.
+Le générateur déterministe produit **14 pages HTML**, plus `sitemap.xml` et `robots.txt`, et actualise les empreintes des CSS/JS. L’outil indépendant `gestion.html` reçoit également les empreintes actuelles.
 
-## Identité visuelle
+## Parcours et identité visuelle
 
-Direction actuelle confirmée par Mathias : « Noir et blanc affirmé, photos mises en valeur ». L’interface blanche et anthracite, les fondus de gris et les photographies en couleur remplacent la palette cuivre et sable de la version7. Le logo complet corrigé est dans `assets/logo-mathias-gouvart.webp` : lignes et textes noirs, MG et barres dorés, fond transparent. Il est utilisé dans les en-têtes, pieds de page et le panneau du bureau en attente du portrait. Le favicon PNG en dérive. L’ancienne variante carrée lumineuse n’est plus utilisée. Le fichier web a été préparé depuis la dernière image jointe avec l’outil de retouche ; si un original vectoriel/PNG source est fourni, le préférer pour une reproduction exacte.
+- `index.html` : perspective 3D immersive avec bouton **Entrer** au centre exact de l’écran. Fondu vers `accueil.html`. Les liens fonctionnent sans JavaScript et avec réduction des animations. Retour navigateur sans voile bloquant ; aucun cookie de visite ni redirection automatique.
+- `accueil.html` : interface principale, premier projet mis en avant, sélection complémentaire, deux catégories et bureau. Tous les liens Accueil et logos internes y retournent, sans imposer à nouveau l’entrée.
+- `bureau.html` : présentation et informations confirmées par Mathias : Mons et alentours, rayon de 50 km, conception jusqu’à la réalisation, permis et régularisation.
+- `projets.html`, `projets-neufs.html`, `projets-renovations.html` : toutes les études/projets et les deux catégories seulement.
+- `projet-*.html` : fiches initiales ; `projet.html?id=identifiant` : nouvelles fiches JSON.
+- `contact.html`, `merci.html` : formulaire et retour du service d’envoi.
+- `mentions-legales.html`, `confidentialite.html` : informations de l’éditeur, des contenus et du formulaire.
+- `gestion.html` : préparation locale des projets par le propriétaire, hors indexation.
 
-La navigation Accueil / Projets / Le bureau / Contact reste visible et centrée à toutes les largeurs, sans menu hamburger. La version9 répond à la demande de retirer les flèches répétées et d’assouplir une composition jugée trop rectiligne : identité détachée de la photo d’entrée, contours légèrement arrondis, décalages mesurés et moins de séparations droites. Les flèches décoratives ont été retirées des liens, boutons, cartes et outil de gestion, dans les pages statiques comme dans le rendu JSON. Les commandes précédent/suivant de la galerie et le chevron fonctionnel des catégories sont conservés.
+Direction confirmée : noir et blanc, photographies en couleur, fondus de gris, contours doux et compositions légèrement décalées. Menu Accueil / Projets / Le bureau / Contact visible et centré sur ordinateur comme sur téléphone. Pas de flèches décoratives répétées ; seules les commandes de galerie et le chevron de catégories sont conservés. Les petits textes ont été rendus plus lisibles. La perspective plein écran concerne seulement l’entrée, conformément à la demande ; les autres pages gardent des images contenues.
 
-Le premier projet mis en avant ouvre l’accueil ; la sélection affiche les autres, sans le répéter. Deux accès photographiques aux catégories et un aperçu du bureau complètent la page. Les images restent contenues et les galeries permettent un agrandissement volontaire. Les titres animés, le mouvement des images et les transitions restent présents, avec prise en compte de la réduction des mouvements. Aucun diaporama ni hero plein écran.
+Logo complet corrigé : `assets/logo-mathias-gouvart.webp` (lignes/textes noirs, MG et barres dorés, fond transparent). Le favicon PNG en dérive. Ne pas remplacer le logo par une nouvelle création. Le fichier a été préparé depuis l’image fournie ; préférer un original vectoriel si Mathias le transmet. Manrope et Cormorant Garamond sont auto-hébergées avec leurs licences SIL OFL.
 
-Pour la version8, Bureau2G a été réellement consulté dans Chromium : accueil, liste des projets et fiche1728, puis comparé au site public version7. Les observations portent sur la place des photos, la hiérarchie des images, les légendes courtes et les accès aux catégories. Aucun texte, logo ou visuel concurrent n’a été repris. Les captures et observations sont sous `/workspace/scratch/references-v8/`. Les références n-co.be et Grolaux restent bloquées par des redirections en boucle après nouvelle tentative ; ne pas prétendre avoir observé leur design.
+La perspective `assets/entree-perspective-3d.webp` est une image d’ambiance générée, 1672 × 941 px, environ 204 Ko, sans script 3D lourd. Les trois dossiers initiaux sont des **études fictives** avec six images d’ambiance générées, explicitement signalées. Ils ne revendiquent aucune réalisation effective. Ne pas inventer de chantier, de plans, de lieu, de diplôme ou de portrait. Le portrait réel et le parcours restent à fournir ; le logo occupe actuellement la place visuelle du bureau sans message de chantier éditorial.
 
-## Pages et contenus
+La composition a été étudiée auparavant à partir de Bureau2G (accueil, projets et fiche réellement consultés). Aucun visuel, logo ou texte concurrent n’a été repris. N-Co et Grolaux n’ont pas pu être observés à cause de leurs redirections.
 
-- `index.html` : projet d’entrée, sélection complémentaire, deux catégories et aperçu du bureau.
-- `bureau.html` : présentation, emplacement du portrait et déroulement d’un premier échange.
-- `projets.html`, `projets-neufs.html`, `projets-renovations.html` : sélection et deux catégories.
-- `projet-*.html` : fiches statiques des trois exemples ; `projet.html?id=identifiant` accueille les nouveaux projets.
-- `contact.html`, `merci.html` : formulaire et retour après envoi.
-- `gestion.html` : outil de préparation des projets, destiné au propriétaire.
-- `content/projects.json` : projets, catégories, images et descriptions.
-- `content/site.json` : coordonnées, présentation et chemin du portrait.
-- `build.py` : gabarits communs et génération des pages.
+## Contenus et dossiers de projets
 
-Les visuels des trois projets initiaux sont des images d’ambiance générées. Les projets sont fictifs et explicitement signalés. Aucune réalisation, qualification, localisation ou expérience non fournie par Mathias n’est revendiquée. La biographie est une proposition à affiner. Le portrait reste à fournir : ajouter sa photographie dans `assets/`, renseigner `portrait` dans `content/site.json`, puis régénérer.
+`content/site.json` contient identité, coordonnées, biographie, secteur, missions, portrait éventuel, URL publique courante et domaine souhaité. Le champ `legal` accepte adresse professionnelle, numéro d’entreprise et inscription professionnelle ; ces informations n’ont pas été fournies et sont omises des pages. Les compléter avant de présenter les informations légales comme exhaustives.
 
-## Ajouter ses projets
+`content/projects.json` conserve le format version 1. Chaque projet possède titre, catégorie, résumé, paragraphes `description`, couverture, galerie et options `featured`/`sample`. Les champs facultatifs `context`, `approach`, `details` accueillent Contexte / Parti architectural / Matières et détails. `location`, `year`, `mission`, `stage` alimentent les métadonnées. Les champs absents restent compatibles avec les anciens fichiers et les rubriques vides sont masquées. Le rendu dynamique utilise des nœuds texte sûrs.
 
-Ouvrir `gestion.html` depuis le serveur ou le site public. Créer/modifier un projet, choisir sa catégorie, ses textes, ses photographies et sa couverture. Cocher la mise en avant pour l’accueil ; décocher « Projet de démonstration » pour une véritable réalisation.
+La sélection d’accueil affiche le premier projet mis en avant dans l’entrée photographique, puis les suivants sans doublon (jusqu’à 3 cartes complémentaires). Le titre de sélection distingue les études fictives d’une sélection contenant de vrais projets. Sans mise en avant, les projets d’accueil sont masqués et les catégories restent accessibles.
 
-Le premier projet mis en avant dans l’ordre du JSON apparaît à l’entrée de l’accueil. Les suivants alimentent la sélection, limitée à trois cartes supplémentaires. Sans projet mis en avant, la photographie d’entrée et la sélection sont masquées ; les accès aux catégories restent présents.
+### Préparer ses projets
 
-L’outil travaille localement dans le navigateur, sans sauvegarde automatique et sans publication directe. Exporter le ZIP avant de fermer ou d’actualiser la page. L’archive contient `content/projects.json` et les nouvelles images utilisées, sous `assets/projets/`. Les images existantes ne sont pas recopiées. Décompresser puis déposer les dossiers sur la branche `gh-pages` en conservant leurs chemins ; les instructions figurent dans l’outil.
+Depuis `gestion.html`, créer/modifier un projet, choisir ses images, textes et rubriques. Décocher « Étude fictive / images d’ambiance » pour une véritable réalisation. Ne renseigner mission, stade, lieu et année qu’avec des informations réelles.
 
-Les listes et fiches relisent le JSON, sans reconstruction nécessaire pour un ajout de projet en ligne. Les nouvelles fiches utilisent la route générique. Une régénération avec Python actualise aussi les versions statiques et les contenus visibles sans JavaScript. Avant une publication depuis ce checkout, récupérer tout changement distant fait par le propriétaire, en particulier le JSON, pour ne pas l’écraser.
+L’outil travaille uniquement dans le navigateur : **aucune sauvegarde automatique, aucune publication directe**. Exporter le ZIP avant fermeture ou actualisation. L’archive contient `content/projects.json` et les nouvelles images utilisées dans `assets/projets/` ; les images déjà publiées ne sont pas recopiées. Décompresser et déposer les fichiers sur `gh-pages`, avec leurs chemins. Les nouvelles fiches génériques se chargent sans reconstruction ; une régénération actualise les pages statiques initiales. Synchroniser tout changement distant du propriétaire avant une nouvelle publication depuis le checkout.
 
-## Contact : activation requise
+## Contact
 
-Le formulaire réalise un POST natif vers `https://formsubmit.co/Mathias.Gouvart.Architecte@gmail.com`, avec nom, adresse de réponse, type de projet et demande. JavaScript ajoute la validation française accessible et la protection contre les doubles clics ; sans JavaScript, la validation HTML reste active. Aucun envoi n’est simulé par l’application. Le captcha du prestataire et le champ piège sont conservés.
+Adresse réelle fournie : `Mathias.Gouvart.Architecte@gmail.com`, téléphone `0499455615`. Le formulaire effectue un POST natif vers FormSubmit. Nom, e-mail, type et demande sont requis ; téléphone et lieu sont facultatifs. L’option Permis / Régularisation complète les deux types de projets. Le premier échange et la définition de la mission sont expliqués, sans délai de réponse inventé.
 
-FormSubmit demande au propriétaire d’activer son adresse au premier envoi. Mathias devra soumettre une demande puis confirmer le message d’activation reçu sur son adresse Gmail. Vérifier ensuite la réception d’une véritable demande avant de considérer l’acheminement opérationnel. Aucun e-mail réel n’a été envoyé par les contrôles automatisés ; les POST de test ont été interceptés dans Chromium. L’accès réseau du cloud aux pages du prestataire reste bloqué par le proxy, même après ajout du domaine au brouillon de configuration ; cela ne prouve pas l’accessibilité depuis le navigateur d’un visiteur.
+`contact.js` ajoute la validation française accessible et la protection contre les doubles clics. Le captcha du prestataire et le champ piège sont conservés. **L’activation par Mathias et la réception d’une véritable demande restent à confirmer.** Les tests interceptent les POST ; aucun e-mail réel n’est envoyé par les outils. Ne pas prétendre que l’acheminement fonctionne après un simple contrôle de formulaire. Aucun secret applicatif n’est requis.
 
-## Mouvement et accessibilité
+## Domaine souhaité
 
-Titres révélés mot par mot avec nom accessible conservé, masques d’images avec dézoom, révélations au défilement, microparallaxe au pointeur et au défilement sur ordinateur, transitions entre pages et galeries natives. Les animations restent présentes sur mobile ; les mouvements liés au pointeur y sont désactivés. Sous-menu et galerie gèrent le clavier et le retour de focus. `prefers-reduced-motion` arrête immédiatement les effets, y compris lors d’un changement de préférence. Le défilement reste natif et le contenu reste visible sans les API d’animation. Les nouveaux projets chargés depuis le JSON sont inscrits dans les animations sans rejouer les éléments déjà vus.
+Adresse prévue : **www.mathiasgouvartarchitecte.be**. Mathias a confirmé que le domaine n’est pas encore acheté. Le site reste sur :
 
-Les catégories ont des pages distinctes. Les premières fiches et leurs images restent consultables sans JavaScript ; les projets ajoutés après génération nécessitent JavaScript jusqu’à une nouvelle génération.
+https://mathgou04-lang.github.io/Mathias-Gouvart-Architecte/
 
-## Vérifier
+`deployment/domaine.md` fournit les étapes DNS, vérification de propriété, GitHub Pages et HTTPS. `deployment/CNAME.example` est un modèle inactif ; **ne pas publier un CNAME racine avant configuration DNS**, pour préserver le lien actuel. Le champ `publicUrl` reste sur GitHub Pages jusqu’à la connexion effective. Le changer puis régénérer actualise canonical, partage, sitemap et retour FormSubmit. Une adresse e-mail sur le domaine nécessite un service de messagerie distinct ; Gmail reste en place jusque-là.
+
+## Vérifications et publication
 
 ```bash
-python3 -m py_compile build.py
+python3 -m py_compile build.py site_extras.py
 python3 build.py
+node --check entree.js
+node --check project-data.js
+node --check editor.js
 node --check script.js
 node --check motion.js
-node --check project-data.js
 node --check contact.js
-node --check editor.js
 ```
 
-Vérifier également dans Chromium les vraies navigations, les catégories, une fiche avec galerie et clavier, les largeurs 320/390/768/1024/1440/1920, le menu mobile, le retour navigateur et la réduction des mouvements. Pour le formulaire, intercepter le domaine d’envoi dans les tests : ne pas envoyer de courrier réel sans demande explicite. Pour l’éditeur, vérifier un ajout avec photos et l’intégrité du ZIP téléchargé, pas seulement son bouton.
+Vérifier les vrais parcours dans Chromium : Entrer clic/clavier, retour navigateur, absence de JavaScript/WAAPI, réduction des mouvements avant et pendant la visite, navigation vers Accueil sans réafficher l’entrée, catégories, galerie et focus. Vérifier 320/390/768/1024/1440/1920 px et les pages Bureau/Contact/Légal/Gestion. Tester un export ZIP puis import lorsque le modèle de projets change. Pour le formulaire, intercepter l’envoi et ne jamais transmettre de courrier réel sans instruction explicite.
 
-## Publication et environnement
+GitHub Pages sert `gh-pages`, racine, mode legacy et `.nojekyll`. Publier uniquement les fichiers relus, générateur et documentation compris ; jamais d’identifiants. Préserver les fichiers distants inconnus et les modifications concurrentes. Une mise à jour de branche doit être un fast-forward, sans force. Un commit ou un build GitHub réussi ne confirme pas la mise en ligne : contrôler HTTP200, ressources exactes et parcours dans le navigateur public. Pages peut prendre plusieurs minutes.
 
-Site public : https://mathgou04-lang.github.io/Mathias-Gouvart-Architecte/
-
-GitHub Pages sert `gh-pages`, dossier racine. `main` est conservée. `.nojekyll` active le service des fichiers statiques. Publier les pages, CSS, JS, `content/`, `assets/`, licences et le générateur/documentation ; ne jamais publier des identifiants. Les captures publiques sont sous `apercus/`.
-
-Les aides de publication et le journal sans secrets sont dans `/workspace/scratch/`. Préserver les fichiers distants inconnus et vérifier les changements concurrents avant toute mise à jour ; ne jamais forcer la branche. Après déploiement, vérifier les pages et les empreintes des ressources à l’adresse publique.
-
-Les aides courantes sont `publish-architect-v9.py`, `verify-architect-v9-publication.py` et `check-architect-v9-public.py`. Les contrôles de mise en page courants sont dans `check-architect-v9-layout.py`, les contrôles des données inchangées sous `v8-functional/`. Adapter les attentes à la structure actuelle : les anciens tests qui exigent trois cartes identiques à l’accueil, des flèches décoratives ou la palette cuivre ne décrivent plus le site.
-
-Les instructions cloud enregistrées dans `start_skill` préparent le développement. Leur sauvegarde ne publie ni l’environnement ni le site. Les processus et identifiants temporaires ne doivent pas être supposés persistants.
+Les captures `apercus/` facilitent la revue mais ne remplacent pas le contrôle du site public. Les instructions cloud enregistrées préparent les reprises ; leur sauvegarde ne publie ni l’environnement ni le site. Les processus et l’authentification temporaires ne doivent pas être supposés persistants.

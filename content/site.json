@@ -7,8 +7,22 @@
   "portrait": null,
   "portraitAlt": "Mathias Gouvart, architecte",
   "biography": [
-    "Je suis Mathias Gouvart, architecte. Le bureau travaille sur des projets de construction neuve, de rénovation et de transformation.",
-    "Chaque projet commence par un échange : vos besoins, vos envies et le lieu. L’étude permet ensuite de préciser les espaces, les circulations, la lumière et les matériaux.",
-    "Vous souhaitez construire ou transformer un bien ? Contactez-moi pour en parler."
-  ]
+    "Je suis Mathias Gouvart, architecte. J’accompagne les projets de construction, de rénovation et de transformation à Mons et dans les alentours, dans un rayon de 50 km.",
+    "Mes missions vont de la conception jusqu’à la réalisation. Le bureau intervient également pour les demandes de permis et les régularisations.",
+    "Le premier échange permet de comprendre votre projet, le lieu et vos attentes. Nous précisons ensemble les besoins, les possibilités et les démarches à envisager."
+  ],
+  "publicUrl": "https://mathgou04-lang.github.io/Mathias-Gouvart-Architecte/",
+  "plannedDomain": "www.mathiasgouvartarchitecte.be",
+  "city": "Mons",
+  "area": "Mons et alentours, dans un rayon de 50 km",
+  "missions": [
+    "Conception jusqu’à la réalisation",
+    "Demandes de permis",
+    "Régularisations"
+  ],
+  "legal": {
+    "companyNumber": "",
+    "registeredAddress": "",
+    "professionalRegistration": ""
+  }
 }
