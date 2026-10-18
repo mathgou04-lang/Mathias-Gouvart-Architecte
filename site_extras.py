@@ -22,15 +22,15 @@ def render_entry(root, site, public, asset):
     markup = f'''<!doctype html>
 <html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#151515">
 <title>{esc(title)}</title><meta name="description" content="{esc(description)}"><link rel="canonical" href="{esc(public)}">
-<link rel="icon" href="{asset('assets/favicon.png')}" type="image/png"><link rel="stylesheet" href="{asset('entree.css')}">
+<link rel="icon" href="{asset('assets/favicon.png')}" type="image/png"><link rel="stylesheet" href="{asset('entree.css')}"><link rel="stylesheet" href="{asset('transitions.css')}">
 <link rel="preload" as="image" href="{asset('assets/entree-perspective-3d.webp')}">
 <meta property="og:title" content="{esc(title)}"><meta property="og:description" content="{esc(description)}"><meta property="og:type" content="website"><meta property="og:locale" content="fr_BE"><meta property="og:url" content="{esc(public)}"><meta property="og:image" content="{esc(public)}assets/entree-perspective-3d.webp">
-<script type="application/ld+json">{schema}</script><script src="{asset('entree.js')}" defer></script></head>
+<script type="application/ld+json">{schema}</script><script src="{asset('transitions.js')}" defer></script><script src="{asset('entree.js')}" defer></script></head>
 <body class="entry-page"><main class="entry-scene">
 <img class="entry-visual" src="{asset('assets/entree-perspective-3d.webp')}" width="1672" height="941" alt="Perspective 3D d’ambiance : une maison contemporaine blanche et anthracite autour d’un patio, à la tombée du jour." fetchpriority="high" decoding="async">
 <div class="entry-shade" aria-hidden="true"></div>
 <a class="entry-brand" data-enter href="accueil.html" aria-label="Mathias Gouvart Architecte — entrer">Mathias Gouvart <span>Architecte</span></a>
-<div class="entry-center"><h1 class="entry-title">Mathias Gouvart <span>Architecte</span></h1><a class="entry-button" data-enter href="accueil.html">Entrer</a></div>
+<div class="entry-center"><h1 class="entry-title">Mathias Gouvart <span>Architecte</span></h1><a class="entry-button" data-enter href="accueil.html"><span class="entry-button-label">Entrer</span></a></div>
 <p class="entry-location">Mons &amp; alentours · 50 km</p><p class="entry-caption">Perspective 3D d’ambiance</p><a class="entry-contact" href="contact.html">Contact</a>
 </main><div class="entry-transition" aria-hidden="true"></div></body></html>'''
     (root / 'index.html').write_text(markup)

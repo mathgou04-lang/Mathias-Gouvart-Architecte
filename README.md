@@ -26,11 +26,15 @@ Le générateur déterministe produit **14 pages HTML**, plus `sitemap.xml` et `
 - `mentions-legales.html`, `confidentialite.html` : informations de l’éditeur, des contenus et du formulaire.
 - `gestion.html` : préparation locale des projets par le propriétaire, hors indexation.
 
-Direction actuelle : une composition de revue d’architecture, avec de grands caractères Cormorant, des textes Manrope, des figures aux proportions variées et des légendes hors des photos. Les cartes arrondies, les panneaux pastel et les bandeaux d’action répétés de la version précédente sont retirés. La couleur reste présente par des accents bleu encre et bordeaux, sans recolorer les photographies ni modifier le logo noir et doré. Pas de vert ni d’ancienne palette cuivre/sable.
+Direction actuelle : une composition de revue d’architecture, avec Archivo pour les titres et les textes et Bodoni Moda en italique pour « Architecte », « Mons » et l’invitation « Entrer ». Les figures gardent des proportions variées et des légendes hors des photos. Les cartes arrondies, les panneaux pastel et les bandeaux d’action répétés de la version précédente sont retirés. La couleur reste présente par des accents bleu encre et bordeaux, sans recolorer les photographies ni modifier le logo noir et doré. Pas de vert ni d’ancienne palette cuivre/sable.
 
 Les catégories deviennent des liens typographiques ouverts, le bureau est évoqué par ses informations réelles plutôt que par une image d’ambiance supplémentaire. La sélection conserve des photos contenues et des décalages maîtrisés. Les invitations au contact utilisent la typographie et les coordonnées, sans gros bandeaux répétés. Menu Accueil / Projets / Le bureau / Contact visible et centré sur ordinateur comme sur téléphone. Pas de flèches décoratives répétées ; seules les commandes de galerie et le chevron de catégories restent présentes. La perspective plein écran concerne seulement l’entrée.
 
-Logo complet corrigé : `assets/logo-mathias-gouvart.webp` (lignes/textes noirs, MG et barres dorés, fond transparent). Le favicon PNG en dérive. Ne pas remplacer le logo par une nouvelle création. Le fichier a été préparé depuis l’image fournie ; préférer un original vectoriel si Mathias le transmet. Manrope et Cormorant Garamond sont auto-hébergées avec leurs licences SIL OFL.
+Logo complet corrigé : `assets/logo-mathias-gouvart.webp` (lignes/textes noirs, MG et barres dorés, fond transparent). Le favicon PNG en dérive. Ne pas remplacer le logo par une nouvelle création. Le fichier a été préparé depuis l’image fournie ; préférer un original vectoriel si Mathias le transmet. Archivo et Bodoni Moda sont auto-hébergées avec leurs licences SIL OFL. Les anciennes polices restent disponibles pour les outils existants.
+
+`transitions.css` et `transitions.js` apportent les transitions entre documents : dévoilement diagonal et passage de la photographie d’une vignette vers la couverture du projet, y compris au retour vers la sélection. Ces transitions utilisent les View Transitions du navigateur lorsqu’elles sont disponibles, sans transformer le site en application ni remplacer ses liens natifs. Les autres navigateurs ont un court rideau animé avec navigation de secours ; l’entrée conserve son propre repli. Aucun historique artificiel ni stockage de visite. Les liens avec modificateur, téléchargements, ancres et coordonnées gardent leur comportement natif.
+
+`motion.js` orchestre les titres mot par mot avec un léger retour souple, le dévoilement oblique des images, leur zoom qui se pose et l’apparition séquencée des légendes, catégories et liens. Le parallax et le zoom au survol utilisent un ressort amorti sur ordinateur ; la boucle de rendu s’arrête au repos. L’entrée conserve son centre exact, avec une approche de la perspective et un survol de son libellé. Les mouvements réduits, l’absence de JavaScript/WAAPI, les erreurs d’animation et le retour navigateur doivent laisser tous les contenus et liens disponibles.
 
 La perspective `assets/entree-perspective-3d.webp` est une image d’ambiance générée, 1672 × 941 px, environ 204 Ko, sans script 3D lourd. Les trois dossiers initiaux sont des **études fictives** avec six images d’ambiance générées, explicitement signalées. Ils ne revendiquent aucune réalisation effective. Ne pas inventer de chantier, de plans, de lieu, de diplôme ou de portrait. Le portrait réel et le parcours restent à fournir ; le logo occupe actuellement la place visuelle du bureau sans message de chantier éditorial.
 
@@ -70,6 +74,7 @@ https://mathgou04-lang.github.io/Mathias-Gouvart-Architecte/
 python3 -m py_compile build.py site_extras.py
 python3 build.py
 node --check entree.js
+node --check transitions.js
 node --check project-data.js
 node --check editor.js
 node --check script.js

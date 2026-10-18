@@ -68,10 +68,10 @@ def page(path, title, desc, body, active='projects', main_attrs='', contact=Fals
     robots = '<meta name="robots" content="noindex,follow">' if path == 'merci.html' else ''
     content = f'''<!doctype html>
 <html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#151515">
-<title>{e(title)} — Mathias Gouvart Architecte</title><meta name="description" content="{e(desc)}">{robots}<link rel="canonical" href="{e(canonical)}"><link rel="icon" href="{asset("assets/favicon.png")}" type="image/png"><link rel="stylesheet" href="{asset('styles.css')}">
+<title>{e(title)} — Mathias Gouvart Architecte</title><meta name="description" content="{e(desc)}">{robots}<link rel="canonical" href="{e(canonical)}"><link rel="icon" href="{asset("assets/favicon.png")}" type="image/png"><link rel="stylesheet" href="{asset('styles.css')}"><link rel="stylesheet" href="{asset('transitions.css')}">
 <meta property="og:title" content="{e(title)} — Mathias Gouvart Architecte"><meta property="og:description" content="{e(desc)}"><meta property="og:url" content="{e(canonical)}"><meta property="og:image" content="{PUBLIC}assets/architecture-hero.webp"><meta property="og:type" content="website"><meta property="og:locale" content="fr_BE">
 <script>document.documentElement.classList.add('js');</script>
-<script id="project-bootstrap" type="application/json">{bootstrap}</script><script src="{asset('project-data.js')}" defer></script><script src="{asset('script.js')}" defer></script><script src="{asset('motion.js')}" defer></script>{f'<script src="{asset("contact.js")}" defer></script>' if contact else ''}</head>
+<script src="{asset('transitions.js')}" defer></script><script id="project-bootstrap" type="application/json">{bootstrap}</script><script src="{asset('project-data.js')}" defer></script><script src="{asset('script.js')}" defer></script><script src="{asset('motion.js')}" defer></script>{f'<script src="{asset("contact.js")}" defer></script>' if contact else ''}</head>
 <body id="haut" class="page-{active}">{header(active)}<main id="contenu" {main_attrs}>{body}</main>{footer(cta and active == "studio")}<div class="page-transition" data-page-transition aria-hidden="true"></div></body></html>'''
     (ROOT / path).write_text(content)
     OUTPUT.append(path)

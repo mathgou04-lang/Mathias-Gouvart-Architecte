@@ -1,0 +1,21 @@
+/* Progressive page choreography: the ordinary links remain the navigation. */
+@view-transition{navigation:auto}
+::view-transition-group(root){animation-duration:.82s;animation-timing-function:cubic-bezier(.22,1,.36,1)}
+::view-transition-old(root){animation:page-release .72s cubic-bezier(.22,1,.36,1) both;mix-blend-mode:normal}
+::view-transition-new(root){animation:page-unfold .82s cubic-bezier(.22,1,.36,1) both;mix-blend-mode:normal}
+::view-transition-group(project-photo){z-index:2;animation-duration:.92s;animation-timing-function:cubic-bezier(.22,1,.36,1);overflow:hidden}
+::view-transition-old(project-photo),::view-transition-new(project-photo){width:100%;height:100%;object-fit:cover;mix-blend-mode:normal;animation-duration:.92s}
+::view-transition-old(project-photo){animation-name:photo-release}
+::view-transition-new(project-photo){animation-name:photo-arrive}
+@keyframes page-release{to{opacity:0;transform:translate3d(0,-32px,0) scale(.985)}}
+@keyframes page-unfold{from{clip-path:polygon(0 100%,100% 78%,100% 100%,0 100%);transform:translate3d(0,24px,0)}to{clip-path:polygon(0 0,100% 0,100% 100%,0 100%);transform:translate3d(0,0,0)}}
+@keyframes photo-release{0%,30%{opacity:1}to{opacity:0}}
+@keyframes photo-arrive{from{opacity:0;filter:brightness(.85)}45%,to{opacity:1;filter:brightness(1)}}
+/* A short, finite curtain is the fallback where cross-document transitions are absent. */
+.page-transition{background:linear-gradient(155deg,var(--blue,#263d59),#1b2533 70%,var(--wine,#713b4e));transform:translate3d(0,110%,0);transform-origin:center;will-change:auto}
+.page-transition:after{content:"";position:absolute;inset:0;background:linear-gradient(125deg,#ffffff14,transparent 50%);pointer-events:none}
+html:not(.js) .page-transition{display:none}
+@media(prefers-reduced-motion:reduce){
+ ::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation-duration:0s!important;animation-delay:0s!important}
+ .page-transition{display:none}
+}

@@ -449,70 +449,16 @@
     });
   }
 
-  const transitionVeil = document.querySelector('[data-page-transition]');
-  let leaveAnimation = null;
-  let leaveTimeout = null;
-  let leaveVersion = 0;
-
-  function resetPageTransition() {
-    leaveVersion += 1;
-    if (leaveTimeout !== null) window.clearTimeout(leaveTimeout);
-    leaveTimeout = null;
-    if (leaveAnimation) leaveAnimation.cancel();
-    leaveAnimation = null;
-    pageLeaving = false;
-    document.body.classList.remove('is-leaving');
-    if (transitionVeil) {
-      transitionVeil.style.transform = '';
-      transitionVeil.style.transformOrigin = '';
-    }
-    updatePlayback();
-  }
-
-  document.addEventListener('click', (event) => {
-    if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-    const link = event.target instanceof Element ? event.target.closest('a[href]') : null;
-    if (!link || link.hasAttribute('download') || (link.target && link.target.toLowerCase() !== '_self')) return;
-    const rawHref = link.getAttribute('href');
-    if (!rawHref || rawHref.startsWith('#')) return;
-    let destination;
-    try { destination = new URL(link.href, document.baseURI); } catch { return; }
-    if (!/^https?:$/.test(destination.protocol) || destination.origin !== window.location.origin) return;
-    // Fragment links on this document keep their native scrolling and history.
-    if (destination.pathname === window.location.pathname && destination.search === window.location.search) return;
-    const basePath = new URL('.', document.baseURI).pathname;
-    if (!/\.html$/i.test(destination.pathname) && destination.pathname !== basePath) return;
-    if (!transitionVeil || typeof transitionVeil.animate !== 'function' || reducedMotion.matches) return;
-    event.preventDefault();
-    if (pageLeaving) return;
+  document.addEventListener('site:navigation-start', () => {
     pageLeaving = true;
-    const version = ++leaveVersion;
     setMenu(false);
     setProjectExpanded(false);
     updatePlayback();
-    document.body.classList.add('is-leaving');
-    transitionVeil.style.transformOrigin = 'bottom';
-    let navigationStarted = false;
-    const navigate = () => {
-      if (!pageLeaving || version !== leaveVersion || navigationStarted) return;
-      navigationStarted = true;
-      if (leaveTimeout !== null) window.clearTimeout(leaveTimeout);
-      leaveTimeout = null;
-      try { window.location.assign(destination.href); } catch { resetPageTransition(); }
-    };
-    try {
-      leaveAnimation = transitionVeil.animate(
-        [{ transform: 'scaleY(0)' }, { transform: 'scaleY(1)' }],
-        { duration: 350, easing: 'cubic-bezier(.76, 0, .24, 1)', fill: 'forwards' }
-      );
-      leaveAnimation.finished.then(navigate, navigate);
-      leaveTimeout = window.setTimeout(navigate, 400);
-    } catch {
-      navigate();
-    }
-  }, { capture: true });
-
-  window.addEventListener('pageshow', resetPageTransition);
+  });
+  window.addEventListener('pageshow', () => {
+    pageLeaving = false;
+    updatePlayback();
+  });
   window.addEventListener('pagehide', stopTimer);
 
   const year = document.querySelector('#year');

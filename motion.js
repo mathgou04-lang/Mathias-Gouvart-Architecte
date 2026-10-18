@@ -1,10 +1,11 @@
 (() => {
   'use strict';
 
+  const reducedMotionQuery = '(prefers-reduced-motion: reduce)';
   let reducedMotion;
   let desktopPointer;
   try {
-    reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    reducedMotion = window.matchMedia(reducedMotionQuery);
     desktopPointer = window.matchMedia('(min-width: 901px) and (hover: hover) and (pointer: fine)');
   } catch {
     return; // The complete static page remains visible.
@@ -21,6 +22,8 @@
   const pendingReveals = new Set();
   const layersByWrapper = new Map();
   const visibleLayers = new Set();
+  const secondaryTargets = new WeakSet();
+  const secondarySelector = '.hero-project-caption, .project-card-category, .project-card-tag, .domain-card-number, .domain-card-label, .method-number, .project-tabs a, .portfolio-count, .back-link, .next-project > .eyebrow, .next-project > a, .footer-column, .footer-bottom';
   let revealObserver = null;
   let parallaxObserver = null;
   let parallaxEnabled = false;
@@ -28,25 +31,89 @@
   let dialogOpen = false;
   let frame = null;
   let pointer = null;
+  let previousFrameTime = 0;
+  let preferenceFrame = null;
 
   const motionAllowed = () => !reducedMotion.matches && !document.hidden && !menuOpen && !dialogOpen;
+  const sequenceDelay = (element) => {
+    const groupItem = element.closest('.project-card, .domain-card, .method-grid > article');
+    if (groupItem && groupItem.parentElement) {
+      const index = Array.prototype.indexOf.call(groupItem.parentElement.children, groupItem);
+      const local = element === groupItem ? 0 : element.matches('h1, h2, h3') ? 140 : 65;
+      return Math.min(280, Math.max(0, index) * 95) + local;
+    }
+    if (element.matches('.hero-project-caption')) return 160;
+    if (element.matches('.project-tabs a, .footer-column') && element.parentElement) {
+      return Math.min(210, Array.prototype.indexOf.call(element.parentElement.children, element) * 60);
+    }
+    return 0;
+  };
   const delayFor = (element) => {
     const delay = Number(element.dataset.delay);
     const order = Number(element.dataset.motionIndex);
     return (Number.isFinite(delay) ? Math.min(1000, Math.max(0, delay)) : 0)
-      + (Number.isFinite(order) ? Math.min(300, Math.max(0, order) * 65) : 0);
+      + (Number.isFinite(order) ? Math.min(300, Math.max(0, order) * 65) : 0) + sequenceDelay(element);
   };
 
+  function listenToPreference(preference, attach) {
+    if (typeof preference.addEventListener === 'function') {
+      preference[attach ? 'addEventListener' : 'removeEventListener']('change', onPreferenceChange);
+    } else if (typeof preference.addListener === 'function') {
+      preference[attach ? 'addListener' : 'removeListener'](onPreferenceChange);
+    }
+  }
+
+  function syncReducedMotion() {
+    // A document handoff can retain an older MediaQueryList while a newly
+    // queried one already reflects the current preference. Rebind that list.
+    try {
+      const fresh = window.matchMedia(reducedMotionQuery);
+      if (fresh.matches !== reducedMotion.matches) {
+        listenToPreference(reducedMotion, false);
+        reducedMotion = fresh;
+        listenToPreference(reducedMotion, true);
+      }
+    } catch { /* Keep the last working preference when matchMedia fails. */ }
+    return reducedMotion.matches;
+  }
+
+  function respectReducedMotion() {
+    if (!syncReducedMotion()) return false;
+    cancelEntries();
+    revealPendingWithoutMotion();
+    stopParallax();
+    return true;
+  }
+
+  function watchActiveAnimations() {
+    if (preferenceFrame !== null || !animations.size || typeof window.requestAnimationFrame !== 'function') return;
+    preferenceFrame = window.requestAnimationFrame(() => {
+      preferenceFrame = null;
+      if (respectReducedMotion()) return;
+      // The guard runs only while this script owns live animations. It never
+      // polls an idle page, including pages without WAAPI or observers.
+      watchActiveAnimations();
+    });
+  }
+
   function play(element, keyframes, options) {
+    if (!canAnimate || respectReducedMotion() || !motionAllowed()) return;
     try {
       const animation = element.animate(keyframes, { easing, fill: 'backwards', ...options });
       animations.add(animation);
-      const forget = () => animations.delete(animation);
+      const forget = () => {
+        animations.delete(animation);
+        if (!animations.size && preferenceFrame !== null) {
+          window.cancelAnimationFrame(preferenceFrame);
+          preferenceFrame = null;
+        }
+      };
       if (animation.finished && typeof animation.finished.then === 'function') animation.finished.then(forget, forget);
       else {
         animation.onfinish = forget;
         animation.oncancel = forget;
       }
+      watchActiveAnimations();
     } catch { /* No persistent hidden style is ever written. */ }
   }
 
@@ -94,39 +161,50 @@
   }
 
   function animateEntry(element, intro = false) {
-    if (!canAnimate || !motionAllowed()) return;
+    if (!canAnimate || respectReducedMotion() || !motionAllowed()) return;
+    // A shared photograph is already moving between documents. Its local
+    // observer may run after pagereveal, so it must not rearm a second mask.
+    if (element.style.viewTransitionName === 'project-photo') return;
     const delay = delayFor(element);
     if (element.hasAttribute('data-text-reveal')) {
       const words = prepareText(element);
       if (words.length) {
+        // Each word clears its own baseline before a small, finite settle.
+        // Spans remain transparent to the heading's accessible name.
         words.forEach((word, index) => play(word, [
-          { opacity: 0, transform: 'translate3d(0,.55em,0)', clipPath: 'inset(0 0 100% 0)' },
-          { opacity: 1, transform: 'translate3d(0,0,0)', clipPath: 'inset(0 0 0 0)' },
-        ], { duration: 900, delay: delay + Math.min(460, index * 45) }));
+          { opacity: 0, transform: 'translate3d(0,.72em,0)', clipPath: 'inset(0 0 100% 0)', offset: 0 },
+          { opacity: 1, transform: 'translate3d(0,-.035em,0)', clipPath: 'inset(-12% -3% -12% -3%)', offset: .76 },
+          { opacity: 1, transform: 'translate3d(0,0,0)', clipPath: 'inset(-12% -3% -12% -3%)', offset: 1 },
+        ], { duration: 1080, delay: delay + Math.min(510, index * 62), easing: 'cubic-bezier(.19,1,.3,1)' }));
         return;
       }
     }
     const image = element.hasAttribute('data-image-motion') || element.dataset.reveal === 'image' || element.dataset.intro === 'image';
     if (image) {
+      // A shallow diagonal gives photographs a distinct reveal without changing
+      // their final rectangular shape or applying a decorative frame.
       play(element, [
-        { opacity: .35, clipPath: 'inset(0 0 100% 0)' },
-        { opacity: 1, clipPath: 'inset(0 0 0 0)' },
-      ], { duration: 1200, delay });
+        { opacity: .35, clipPath: 'polygon(0 0,100% 0,100% 2%,0 13%)', offset: 0 },
+        { opacity: 1, clipPath: 'polygon(0 0,100% 0,100% 88%,0 100%)', offset: .72 },
+        { opacity: 1, clipPath: 'polygon(0 0,100% 0,100% 100%,0 100%)', offset: 1 },
+      ], { duration: 1420, delay, easing: 'cubic-bezier(.2,.75,.2,1)' });
       const photo = element.matches('img') ? null : element.querySelector('img');
       if (photo) {
         const computed = window.getComputedStyle(photo).transform;
         const base = computed === 'none' ? '' : computed;
         play(photo, [
-          { transform: `${base} scale(1.065)`.trim() },
+          { transform: `${base} scale(1.12) translate3d(0,-1.5%,0)`.trim() },
           { transform: base || 'none' },
-        ], { duration: 1550, delay });
+        ], { duration: 1850, delay, easing: 'cubic-bezier(.16,1,.3,1)' });
       }
       return;
     }
+    const secondary = secondaryTargets.has(element);
     play(element, [
-      { opacity: 0, transform: `translate3d(0,${intro ? 22 : 16}px,0)` },
-      { opacity: 1, transform: 'translate3d(0,0,0)' },
-    ], { duration: intro ? 850 : 750, delay });
+      { opacity: 0, transform: `translate3d(0,${secondary ? 11 : intro ? 28 : 22}px,0)`, offset: 0 },
+      { opacity: 1, transform: 'translate3d(0,-1px,0)', offset: .78 },
+      { opacity: 1, transform: 'translate3d(0,0,0)', offset: 1 },
+    ], { duration: secondary ? 720 : intro ? 1000 : 900, delay });
   }
 
   function cancelEntries() {
@@ -134,6 +212,8 @@
       try { animation.cancel(); } catch { /* The ordinary stylesheet is visible. */ }
     });
     animations.clear();
+    if (preferenceFrame !== null) window.cancelAnimationFrame(preferenceFrame);
+    preferenceFrame = null;
   }
 
   function ensureRevealObserver() {
@@ -169,7 +249,12 @@
       animateEntry(element, true);
     });
     if (!reducedMotion.matches) ensureRevealObserver();
-    document.querySelectorAll('[data-reveal], [data-text-reveal], [data-image-motion]').forEach((element) => {
+    const targets = new Set(document.querySelectorAll('[data-reveal], [data-text-reveal], [data-image-motion]'));
+    document.querySelectorAll(secondarySelector).forEach((element) => {
+      secondaryTargets.add(element);
+      targets.add(element);
+    });
+    targets.forEach((element) => {
       if (seenReveals.has(element)) return;
       seenReveals.add(element);
       if (reducedMotion.matches || !revealObserver) return;
@@ -191,6 +276,10 @@
     else item.layer.style.removeProperty('transform');
     item.x = 0;
     item.y = 0;
+    item.vx = 0;
+    item.vy = 0;
+    item.scale = 1.065;
+    item.vs = 0;
     item.prepared = false;
   }
 
@@ -199,7 +288,7 @@
     const style = window.getComputedStyle(item.layer);
     item.baseTransform = style.transform === 'none' ? '' : style.transform;
     item.ownsScale = individualTransforms && style.scale === 'none';
-    if (item.ownsScale) item.layer.style.scale = '1.045';
+    if (item.ownsScale) item.layer.style.scale = String(item.scale);
     item.prepared = true;
   }
 
@@ -218,49 +307,62 @@
       const item = {
         wrapper, layer, originalTransform: layer.style.transform,
         originalTranslate: layer.style.translate, originalScale: layer.style.scale,
-        baseTransform: '', ownsScale: false, prepared: false, x: 0, y: 0,
+        baseTransform: '', ownsScale: false, prepared: false, x: 0, y: 0, vx: 0, vy: 0, scale: 1.065, vs: 0,
       };
       layersByWrapper.set(wrapper, item);
       if (parallaxEnabled && parallaxObserver) parallaxObserver.observe(wrapper);
     });
   }
 
-  function renderParallax() {
+  function renderParallax(timestamp) {
     frame = null;
-    if (!parallaxEnabled || !motionAllowed()) return;
+    if (respectReducedMotion() || !parallaxEnabled || !motionAllowed()) return;
+    const step = previousFrameTime ? Math.min(1.7, Math.max(.45, (timestamp - previousFrameTime) / 16.667)) : 1;
+    previousFrameTime = timestamp;
     const viewportHeight = window.innerHeight;
     const updates = [];
     let settling = false;
-    // Batch all geometry reads before writing any transforms.
+    const spring = (current, velocity, target, tolerance) => {
+      const nextVelocity = (velocity + (target - current) * .1 * step) * Math.pow(.74, step);
+      const next = current + nextVelocity * step;
+      if (Math.abs(target - next) < tolerance && Math.abs(nextVelocity) < tolerance) return [target, 0, false];
+      return [next, nextVelocity, true];
+    };
+    // Read every visible figure first; write only after geometry is collected.
     visibleLayers.forEach((item) => {
       const bounds = item.wrapper.getBoundingClientRect();
       if (!item.wrapper.isConnected || !bounds.height || bounds.bottom <= 0 || bounds.top >= viewportHeight) {
-        updates.push([item, null, null]);
+        updates.push([item, null]);
         return;
       }
       const progress = (viewportHeight / 2 - bounds.top - bounds.height / 2) / ((viewportHeight + bounds.height) / 2);
       let targetX = 0;
-      let targetY = Math.max(-1, Math.min(1, progress)) * Math.min(12, bounds.height * .012);
+      let targetY = Math.max(-1, Math.min(1, progress)) * Math.min(18, bounds.height * .018);
+      let targetScale = 1.065;
       if (pointer && pointer.item === item) {
         const x = Math.max(-1, Math.min(1, (pointer.x - bounds.left) / bounds.width * 2 - 1));
         const y = Math.max(-1, Math.min(1, (pointer.y - bounds.top) / bounds.height * 2 - 1));
-        targetX = x * Math.min(5, bounds.width * .006);
-        targetY += y * Math.min(4, bounds.height * .006);
+        targetX = x * Math.min(9, bounds.width * .01);
+        targetY += y * Math.min(5, bounds.height * .006);
+        targetScale = 1.095;
       }
-      const nextX = item.x + (targetX - item.x) * .14;
-      const nextY = item.y + (targetY - item.y) * .14;
-      if (Math.abs(nextX - targetX) > .08 || Math.abs(nextY - targetY) > .08) settling = true;
-      updates.push([item, Math.abs(nextX - targetX) < .08 ? targetX : nextX, Math.abs(nextY - targetY) < .08 ? targetY : nextY]);
+      const x = spring(item.x, item.vx, targetX, .025);
+      const y = spring(item.y, item.vy, targetY, .025);
+      const scale = spring(item.scale, item.vs, targetScale, .00008);
+      settling = settling || x[2] || y[2] || scale[2];
+      updates.push([item, { x: x[0], vx: x[1], y: y[0], vy: y[1], scale: scale[0], vs: scale[1] }]);
     });
-    updates.forEach(([item, x, y]) => {
-      if (x === null) { restoreLayer(item); return; }
+    updates.forEach(([item, values]) => {
+      if (values === null) { restoreLayer(item); return; }
       prepareLayer(item);
-      item.x = x;
-      item.y = y;
-      if (individualTransforms) item.layer.style.translate = `${x.toFixed(2)}px ${y.toFixed(2)}px`;
-      else item.layer.style.transform = `translate3d(${x.toFixed(2)}px,${y.toFixed(2)}px,0) ${item.baseTransform} scale(1.045)`.trim();
+      Object.assign(item, values);
+      if (individualTransforms) {
+        item.layer.style.translate = `${item.x.toFixed(2)}px ${item.y.toFixed(2)}px`;
+        if (item.ownsScale) item.layer.style.scale = item.scale.toFixed(5);
+      } else item.layer.style.transform = `translate3d(${item.x.toFixed(2)}px,${item.y.toFixed(2)}px,0) ${item.baseTransform} scale(${item.scale.toFixed(5)})`.trim();
     });
     if (settling) requestParallaxFrame();
+    else previousFrameTime = 0;
   }
 
   function requestParallaxFrame() {
@@ -286,6 +388,7 @@
     pointer = null;
     if (frame !== null) window.cancelAnimationFrame(frame);
     frame = null;
+    previousFrameTime = 0;
     window.removeEventListener('scroll', requestParallaxFrame);
     window.removeEventListener('resize', requestParallaxFrame);
     document.removeEventListener('pointermove', onPointerMove);
@@ -297,6 +400,7 @@
   }
 
   function updateParallax() {
+    if (respectReducedMotion()) return;
     const eligible = motionAllowed() && desktopPointer.matches && !navigator.maxTouchPoints
       && layersByWrapper.size > 0 && canObserve && typeof window.requestAnimationFrame === 'function';
     if (!eligible) { stopParallax(); return; }
@@ -321,24 +425,38 @@
     } catch { stopParallax(); }
   }
 
+  function onLinkEnter(event) {
+    if (!canAnimate || !desktopPointer.matches || !motionAllowed() || event.pointerType === 'touch') return;
+    const link = event.target instanceof Element ? event.target.closest('a.text-link, a.button, a.domain-card') : null;
+    if (!link || event.relatedTarget instanceof Node && link.contains(event.relatedTarget)) return;
+    const label = link.matches('.domain-card') ? link.querySelector('.domain-card-label') : link;
+    if (!label) return;
+    // No pointer tracking: the link gets one short, finite response and
+    // always returns to its ordinary position before the next interaction.
+    const computed = window.getComputedStyle(label).transform;
+    const base = computed === 'none' ? '' : computed;
+    play(label, [
+      { transform: base || 'none', offset: 0 },
+      { transform: `${base} translate3d(5px,0,0)`.trim(), offset: .35 },
+      { transform: `${base} translate3d(-.6px,0,0)`.trim(), offset: .75 },
+      { transform: base || 'none', offset: 1 },
+    ], { duration: 650, easing: 'cubic-bezier(.2,.65,.35,1)' });
+  }
+
   function scanContent() {
+    respectReducedMotion();
     scanReveals();
     scanParallaxLayers();
     updateParallax();
   }
 
   function onPreferenceChange() {
-    if (reducedMotion.matches) {
-      cancelEntries();
-      revealPendingWithoutMotion();
-    }
+    respectReducedMotion();
     updateParallax();
   }
 
-  [reducedMotion, desktopPointer].forEach((preference) => {
-    if (typeof preference.addEventListener === 'function') preference.addEventListener('change', onPreferenceChange);
-    else if (typeof preference.addListener === 'function') preference.addListener(onPreferenceChange);
-  });
+  [reducedMotion, desktopPointer].forEach((preference) => listenToPreference(preference, true));
+  document.addEventListener('pointerover', onLinkEnter, { passive: true });
   document.addEventListener('site:content-updated', scanContent);
   document.addEventListener('site:menu-change', (event) => {
     menuOpen = Boolean(event.detail && event.detail.open);
@@ -356,6 +474,7 @@
   });
   window.addEventListener('pagehide', () => { cancelEntries(); stopParallax(); });
   window.addEventListener('pageshow', scanContent);
+  window.addEventListener('pagereveal', onPreferenceChange);
 
   scanContent();
 })();
