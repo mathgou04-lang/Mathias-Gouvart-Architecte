@@ -10,6 +10,7 @@
   const animations = new Set();
   let leaving = false;
   let timer = null;
+  let entrance = null;
 
   function animate(element, frames, options) {
     if (!element || typeof element.animate !== 'function') return null;
@@ -28,14 +29,15 @@
     timer = null;
     animations.forEach(animation => animation.cancel());
     animations.clear();
+    entrance = null;
     leaving = false;
     document.body.removeAttribute('aria-busy');
     veil.style.opacity = '';
   }
 
   if (!reduced.matches) {
-    animate(image, [{ transform: 'scale(1.04)' }, { transform: 'scale(1)' }], { duration: 1800 });
-    for (const [selector, delay] of [['.entry-brand', 80], ['.entry-title', 180], ['.entry-button', 330]]) {
+    entrance = animate(image, [{ transform: 'scale(1)' }, { transform: 'scale(1.025)' }], { duration: 2400 });
+    for (const [selector, delay] of [['.entry-brand', 80], ['.entry-button', 230]]) {
       animate(document.querySelector(selector), [{ opacity: 0, translate: '0 12px' }, { opacity: 1, translate: '0 0' }], { duration: 900, delay, fill: 'backwards' });
     }
   }
@@ -53,8 +55,16 @@
       navigated = true;
       window.location.assign(destination);
     };
+    // Continue from the visible scale even when the invitation is used immediately.
+    const visibleTransform = getComputedStyle(image).transform;
+    if (entrance) entrance.cancel();
+    entrance = null;
     const animation = animate(veil, [{ opacity: 0 }, { opacity: 1 }], { duration: 520, fill: 'forwards' });
-    animate(image, [{ transform: 'scale(1)' }, { transform: 'scale(1.025)' }], { duration: 650, fill: 'forwards' });
+    if (!animation) {
+      navigate();
+      return;
+    }
+    animate(image, [{ transform: visibleTransform }, { transform: 'scale(1.055)' }], { duration: 650, fill: 'forwards' });
     if (animation) animation.finished.then(navigate, () => {});
     timer = window.setTimeout(navigate, 700);
   }));
@@ -68,6 +78,6 @@
   if (typeof reduced.addEventListener === 'function') reduced.addEventListener('change', changePreference);
   else if (typeof reduced.addListener === 'function') reduced.addListener(changePreference);
   window.addEventListener('pageshow', event => {
-    if (event.persisted || leaving) reset();
+    if (event.persisted) reset();
   });
 })();

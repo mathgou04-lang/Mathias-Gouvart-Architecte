@@ -29,7 +29,7 @@ def render_entry(root, site, public, asset):
 <body class="entry-page"><main class="entry-scene">
 <img class="entry-visual" src="{asset('assets/entree-perspective-3d.webp')}" width="1672" height="941" alt="Perspective 3D d’ambiance : une maison contemporaine blanche et anthracite autour d’un patio, à la tombée du jour." fetchpriority="high" decoding="async">
 <div class="entry-shade" aria-hidden="true"></div>
-<a class="entry-brand" data-enter href="accueil.html" aria-label="Mathias Gouvart Architecte — entrer"><img src="{asset('assets/logo-mathias-gouvart.webp')}" width="155" height="126" alt="Mathias Gouvart Architecte"></a>
+<a class="entry-brand" data-enter href="accueil.html" aria-label="Mathias Gouvart Architecte — entrer">Mathias Gouvart <span>Architecte</span></a>
 <div class="entry-center"><h1 class="entry-title">Mathias Gouvart <span>Architecte</span></h1><a class="entry-button" data-enter href="accueil.html">Entrer</a></div>
 <p class="entry-location">Mons &amp; alentours · 50 km</p><p class="entry-caption">Perspective 3D d’ambiance</p><a class="entry-contact" href="contact.html">Contact</a>
 </main><div class="entry-transition" aria-hidden="true"></div></body></html>'''

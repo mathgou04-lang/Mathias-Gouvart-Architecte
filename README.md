@@ -17,8 +17,8 @@ Le générateur déterministe produit **14 pages HTML**, plus `sitemap.xml` et `
 
 ## Parcours et identité visuelle
 
-- `index.html` : perspective 3D immersive avec bouton **Entrer** au centre exact de l’écran. Fondu vers `accueil.html`. Les liens fonctionnent sans JavaScript et avec réduction des animations. Retour navigateur sans voile bloquant ; aucun cookie de visite ni redirection automatique.
-- `accueil.html` : interface principale, premier projet mis en avant, sélection complémentaire, deux catégories et bureau. Tous les liens Accueil et logos internes y retournent, sans imposer à nouveau l’entrée.
+- `index.html` : perspective 3D immersive avec **Entrer** au centre exact de l’écran, sans cartouche ni bouton en forme de carte. Fondu vers `accueil.html`. Les liens fonctionnent sans JavaScript et avec réduction des animations. Retour navigateur sans voile bloquant ; aucun cookie de visite ni redirection automatique. Partager l’URL racine pour ouvrir ce point d’entrée.
+- `accueil.html` : interface intérieure avec ouverture typographique, premier projet, sélection complémentaire, deux catégories et présentation du bureau. Le lien de navigation Accueil y retourne. Les logos et « Revoir l’entrée » ouvrent `index.html` ; aucune redirection ne bloque les liens directs vers une page.
 - `bureau.html` : présentation et informations confirmées par Mathias : Mons et alentours, rayon de 50 km, conception jusqu’à la réalisation, permis et régularisation.
 - `projets.html`, `projets-neufs.html`, `projets-renovations.html` : toutes les études/projets et les deux catégories seulement.
 - `projet-*.html` : fiches initiales ; `projet.html?id=identifiant` : nouvelles fiches JSON.
@@ -26,9 +26,9 @@ Le générateur déterministe produit **14 pages HTML**, plus `sitemap.xml` et `
 - `mentions-legales.html`, `confidentialite.html` : informations de l’éditeur, des contenus et du formulaire.
 - `gestion.html` : préparation locale des projets par le propriétaire, hors indexation.
 
-Direction actuelle : base claire et texte sombre, avec des accents bleu encre et bordeaux, des fonds bleu brume et rose froid très pâle, et des fondus de couleurs. Cette évolution répond à la demande de rendre le site moins monotone. Les photographies gardent leurs couleurs, sans filtre de recoloration ; le logo noir et doré reste intact. Le vert et l’ancienne palette cuivre/sable ne sont pas repris.
+Direction actuelle : une composition de revue d’architecture, avec de grands caractères Cormorant, des textes Manrope, des figures aux proportions variées et des légendes hors des photos. Les cartes arrondies, les panneaux pastel et les bandeaux d’action répétés de la version précédente sont retirés. La couleur reste présente par des accents bleu encre et bordeaux, sans recolorer les photographies ni modifier le logo noir et doré. Pas de vert ni d’ancienne palette cuivre/sable.
 
-Les deux catégories de l’accueil utilisent des cartes éditoriales colorées, plutôt que de répéter les photographies déjà présentes dans les projets. Les fonds, proportions et traitements des sections varient. Contours doux et légers décalages sont conservés. Menu Accueil / Projets / Le bureau / Contact visible et centré sur ordinateur comme sur téléphone. Pas de flèches décoratives répétées ; seules les commandes de galerie et le chevron de catégories restent présentes. La perspective plein écran concerne seulement l’entrée ; les autres pages gardent des images contenues.
+Les catégories deviennent des liens typographiques ouverts, le bureau est évoqué par ses informations réelles plutôt que par une image d’ambiance supplémentaire. La sélection conserve des photos contenues et des décalages maîtrisés. Les invitations au contact utilisent la typographie et les coordonnées, sans gros bandeaux répétés. Menu Accueil / Projets / Le bureau / Contact visible et centré sur ordinateur comme sur téléphone. Pas de flèches décoratives répétées ; seules les commandes de galerie et le chevron de catégories restent présentes. La perspective plein écran concerne seulement l’entrée.
 
 Logo complet corrigé : `assets/logo-mathias-gouvart.webp` (lignes/textes noirs, MG et barres dorés, fond transparent). Le favicon PNG en dérive. Ne pas remplacer le logo par une nouvelle création. Le fichier a été préparé depuis l’image fournie ; préférer un original vectoriel si Mathias le transmet. Manrope et Cormorant Garamond sont auto-hébergées avec leurs licences SIL OFL.
 
